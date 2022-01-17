@@ -1,0 +1,78 @@
+<div class="modal fade " id="unit_model_create" tabindex="-1" aria-labelledby="unit_modelLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="unit_modelLabel">New Unit</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="post" id="unitFormCreate">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="unit_full_name" class="col-form-label">Name:</label>
+                        <input type="text" class="form-control" id="unit_full_name">
+                    </div>
+                    <div class="form-group">
+                        <label for="unit_name" class="col-form-label">Short Name:</label>
+                        <input type="text" class="form-control" id="unit_name">
+                    </div>
+                    <div class="my-4 col-md-6">
+                        <div class="form-floating">
+                            <div class="form-check" title="marks user as active or inactive">
+                                <input id="editUnit" class="form-check-input" type="checkbox" name="" value="true">
+                                <label for="editUnit" class="form-check-label">Active Unit</label>
+                            </div>
+                        </div>
+                    </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" id='' class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary btn-block">Create Unit</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    $('#unitFormCreate').on('submit', function (e) {
+        event.preventDefault();
+
+        $.ajax({
+            url: '/store/unit-home/units/',
+            type: 'POST',
+            data: {
+                name: $("#unit_full_name").val(),
+                unit: $('#unit_name').val(),//.addClass('text-uppercase'),
+                available: $('#editUnit').is(':checked'),
+
+                csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
+            },
+
+            success: function (data) {
+
+                if (data.message) {
+                    swallAlerts(`${data.message}`, 'success', "bottom-end", 3000, false);
+                    $('#unit_of_measurent_table').DataTable().ajax.reload();
+                    document.getElementById("unitFormCreate").reset();
+                }
+
+                if (data.error){
+                    swallAlerts(`${data.error}`, 'error', "bottom-end", 5000, false);
+
+                }
+
+            }
+
+        });
+    })
+
+
+
+
+
+
+</script>

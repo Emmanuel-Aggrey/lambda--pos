@@ -1,0 +1,239 @@
+<!-- Modal To Create product start-->
+<div class="modal fade modelProduct" id="modelProductAdd" data-backdrop="static" data-keyboard="false" tabindex="-1"
+    role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document" id="create_product_model">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <h3 class="my-4 text-center font-weight-light" id="user_model_title">
+                        Create New Product</h3>
+
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="closeProductModel">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="">
+                    <form method="POST" action="#" id="CreateProductForm">
+                        {% csrf_token %}
+                        <div class="mb-3 row">
+                            <div class="col-md-6">
+                                <div class="mb-3 form-floating mb-md-0">
+                                    <input class="form-control" id="inputname" type="text" name="productname"
+                                        placeholder="Enter Product Name" required />
+                                    <label for="inputname">Name</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input class="form-control" id="inputPrice" type="number" name=price step=".01"
+                                        required placeholder="price" />
+                                    <label for="inputPrice">Price</label>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="mb-3 row">
+                            <div class="col-md-6">
+                                <div class="mb-3 form-floating mb-md-0">
+                                    <input class="form-control" id="inputQuantity" type="number" name="quantity"
+                                        placeholder="quantity" required />
+                                    <label for="inputQuantity">Quantity</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+
+                                <div class="form-floating">
+                                    <input class="form-control" id="inputDescription" type="text" name="description"
+                                        placeholder="Enter Description (optional)" />
+                                    <label for="inputDescription">Description</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3 row">
+                            <div class="col-md-6">
+                                <div class="form-floating">
+
+                                    <select class="form-control inputUnit" id="inputUnit" name="unit"
+                                        placeholder="Select Unit">
+                                        <option value="">Select Unit</option>
+                                    </select>
+
+
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+
+                                <div class="form-floating">
+
+                                    <select class="form-control inputSupplier" id="inputSupplier" name="suppliers[]"
+                                        multiple="multiple" placeholder="Select suppliers">
+                                    </select>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3 row">
+                            <div class="col-md-6">
+                                <div class="mb-3 form-floating mb-md-0">
+                                    <input class="form-control" id="inputStockLevel" type="number" name="stock_level"
+                                        value="20" autocomplete='off' placeholder="Enter Stock Level" />
+                                    <label for="inputStockLevel">Stock Level</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3 form-floating mb-md-0">
+                                    <input class="form-control" id="inputShelfNumber" type="text" name="shelfNumber"
+                                        autocomplete='off' placeholder="Enter Shelf Number" />
+                                    <label for="inputShelfNumber">Shelf Number</label>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="mb-3 row">
+                            <div class="col-md-3" id="">
+                                <div class="mb-3 form-floating mb-md-0">
+                                    <div class="btn-group-toggle" data-toggle="buttons">
+                                        <label class="btn btn-muted" id="has_expire_date">
+                                            <input type="checkbox" id="inputHasExpireDate"> Has Expire Date
+                                        </label>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="col-md-3 months_to_expire">
+                                <div class="mb-3 form-floating mb-md-0">
+                                    <input class="form-control" id="inputMonthsToExpire" type="number"
+                                        name="months_to_expire" value="3" placeholder="To Expire Edit" />
+                                    <label for="inputMonthsToExpire">Months To Expire</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6 expireDate" id=>
+                                <div class="mb-3 form-floating mb-md-0">
+                                    <input class="form-control " id="inputExpireDate" type="date" name="expire_date"
+                                        autocomplete='off' placeholder="Expire Data" />
+                                    <label for="inputExpireDate">Expire Date</label>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="mt-4 mb-0">
+                            <div class="d-grid"> <button class="btn btn-primary btn-block" id="user_model_submit"
+                                    type="submit">Create
+                                    Product</button> </div>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- Model To Create product End-->
+
+
+<script>
+    // document.getElementById('CreateProductForm').reset();
+
+
+    // remove expire date from dom if inputHasExpireDate is false
+    $(function () {
+
+        $(".expireDate").fadeOut()
+        $(".months_to_expire").fadeOut()
+
+
+        $("#has_expire_date").on("click", function () {
+
+            has_expire_date = $('#inputHasExpireDate').is(':checked')
+            // months_to_expire = $("#inputMonthsToExpire").val()
+
+            if (has_expire_date) {
+
+                $(".expireDate").fadeOut()
+
+                $("#inputExpireDate").val('');
+                $(".months_to_expire").fadeOut()
+                $("#inputMonthsToExpire").val('')
+            }
+
+            else {
+
+                $(".expireDate").fadeIn('slow')
+                $(".months_to_expire").fadeIn()
+            }
+        })
+
+    })
+
+
+
+    // create product
+
+    $('#CreateProductForm').on('submit', function (e) {
+
+        e.preventDefault();
+
+        // find a way to collect submited data with this
+        var formData = $(this).serialize()
+
+        // console.log(formData)
+        category_url = localStorage.getItem('category_url');
+        url = `/store/products-in-category/${category_url}/`
+        $.ajax({
+            url: url,
+            type: 'POST',
+            // data: formData,
+            data: {
+                name: $('#inputname').val(),
+                price: $('#inputPrice').val(),
+                description: $("#inputDescription").val(),
+                quantity: $('#inputQuantity').val(),
+                unit: $('#inputUnit').val(),
+                supplier: $('#inputSupplier').val(),
+                stock_level: $('#inputStockLevel').val(),
+                shelf_number: $("#inputShelfNumber").val(),
+                months_to_expire: $("#inputMonthsToExpire").val(),
+                has_expire_date: $('#inputHasExpireDate').is(':checked'),
+
+                expire_date: $("#inputExpireDate").val(),
+                csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
+
+            },
+
+
+            success: function (res) {
+                console.log("url", url);
+                console.log('inputMonthsToExpire >', $("#inputMonthsToExpire").val())
+
+
+                displayProductTable(category_url)
+                $("#inputUnit").empty()
+                $("#inputSupplier").empty()
+                // $("#inputExpireDateEdit").fadeOut('fast')
+
+
+                if (res.data) {
+                    swallAlerts('created successfully', "success", "bottom-end", 3000, false);
+                    document.getElementById('CreateProductForm').reset();
+
+                }
+                else if (res.error) {
+                    swallAlerts('error try again', 'error', "bottom-end", 8000, false);
+
+
+                }
+            },
+            error: function () {
+                console.log('error')
+
+
+            }
+        })
+
+    })
+
+
+</script>

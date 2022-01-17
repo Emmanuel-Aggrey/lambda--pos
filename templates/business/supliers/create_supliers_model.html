@@ -1,0 +1,139 @@
+<!-- Modal To Create User Account-->
+<div class="modal fade" id="create_user_model" tabindex="-1" role="dialog" aria-labelledby="modelTitleId"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document" id="mymodel">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <h3 class="text-center font-weight-light my-4" id="user_model_title">
+                        Create Suplier</h3>
+
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="">
+                    <form method="POST" action="#" id="supplierForm">
+                        {% csrf_token %}
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3 mb-md-0">
+                                    <input class="form-control" id="inputSuplierName" type="text" name="username"
+                                        placeholder="Enter user Username" required />
+                                    <label for="inputSuplierName">Suplier Name</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input class="form-control" id="inputSuplierEmail" type="email" name=email
+                                        placeholder="name@domain.com" />
+                                    <label for="inputSuplierEmail">Email address</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3 mb-md-0">
+                                    <input class="form-control" id="inputSuplierPhone" type="text" name="phone"
+                                        placeholder="Enter Suplier Phone Number" required />
+                                    <label for="inputSuplierPhone">Phone</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+
+                                <div class="form-floating">
+                                    <input class="form-control" id="inputSuplierLocation" type="text" name="location"
+                                        placeholder="Enter Suplier Location" required />
+                                    <label for="inputSuplierLocation">Location</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3 mb-md-0">
+                                    <input class="form-control" id="inputSuplierDescription" type="text" name="phone"
+                                        placeholder="Description" />
+                                    <label for="inputSuplierDescription">Description</label>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <div class="form-check" title="marks user as active or inactive">
+                                        <input id="Suplieravailable" class="form-check-input" type="checkbox" name=""
+                                            value="true">
+                                        <label for="Suplieravailable" class="form-check-label">Active Suplier</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-4 mb-0">
+                            <div class="d-grid"> <button class="btn btn-primary btn-block" id="user_model_submit"
+                                    type="submit">Create
+                                    Suplier</button> </div>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- Model To Create User Account End-->
+
+
+<script>
+    // register user
+
+    $('#supplierForm').on('submit', function (e) {
+        e.preventDefault();
+        $.ajax({
+            url: '/business/create-supplier/',
+            type: 'POST',
+            data: {
+                name: $('#inputSuplierName').val(),
+                phone: $('#inputSuplierPhone').val(),
+                email: $('#inputSuplierEmail').val(),
+                description: $('#inputSuplierDescription').val(),
+                location: $('#inputSuplierLocation').val(),
+                available: $('#Suplieravailable').is(':checked'),
+
+                csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
+
+            },
+
+            beforeSend: function () {
+
+            },
+            success: function (res) {
+                console.log("res", res);
+                console.log(res)
+
+                if (res.message) {
+                    
+                    swallAlerts(`${res.message}`, 'success', "bottom-end", 3000, false);
+                    document.getElementById('supplierForm').reset();
+                    $('#employees_table').DataTable().ajax.reload();
+                    // $('body, html').animate({ scrollTop: $('form').offset().top }, 'slow');
+
+                }
+                else {
+                   
+                    swallAlerts(`${res.error}`, 'error', "bottom-end", 3000, false);
+
+                }
+            },
+            error: function () {
+                console.log('error')
+
+
+            }
+        })
+
+    })
+</script>

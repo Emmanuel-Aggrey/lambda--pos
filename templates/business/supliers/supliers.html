@@ -1,0 +1,214 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+
+{% endblock title %}
+
+{% block content %}
+<script src="{% static 'js/font-awsome-all.min.js' %}"></script>
+
+
+<body class="sb-nav-fixed">
+    <!-- nav start-->
+    {% include "partials/navbar.html" %}
+
+    <!-- nav end -->
+    <div id="layoutSidenav">
+        <!-- Side bar Start -->
+        {% include "partials/sidebar.html" %}
+
+        <!-- side bar end -->
+
+
+        <div id="layoutSidenav_content">
+            <main>
+                <div class="px-4 container-fluid">
+                    <h1 class="mt-4">Supliers</h1>
+                    <ol class="mb-4 breadcrumb">
+                        <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
+                        <li class="breadcrumb-item active">Supliers</li>
+                    </ol>
+
+                    <div class="mb-4 card">
+                        <div class="card-header text-uppercase fw-bolder">
+                            <i class="fas fa-table me-1"></i>
+                            Supliers | {{request.user.business.name}}
+                            <!-- Button trigger modal -->
+
+                            <button style="float: right;" type="button" class="btn btn-primary btn-sm"
+                                id="user_model_btn" data-toggle="modal" data-target="#create_user_model">
+                                <i class="fa fa-plus" aria-hidden="true"></i>   New Suplier 
+                            </button>
+
+                        </div>
+                        <div class="card-body">
+                            <table id="employees_table" class="table table-striped table-hover styled-table">
+                                <thead class="table-active">
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Phone</th>
+                                        <th>Description</th>
+                                        <th>Location</th>
+                                        <!-- <th>Available</th> -->
+                                        <th></th>
+
+                                    </tr>
+                                </thead>
+
+
+
+                                <tbody>
+                                    <form>
+                                        {% csrf_token %}
+                                    </form>
+
+
+                                </tbody>
+
+                                <tfoot>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Phone</th>
+                                        <th>Description</th>
+                                        <th>Location</th>
+                                        <!-- <th>Available</th> -->
+
+
+                                        <th></th>
+
+                                    </tr>
+                                </tfoot>
+                            </table>
+                            <!-- create_user_model start-->
+                            {% include 'business/supliers/create_supliers_model.html' %}
+                            <!-- create_user_model end-->
+
+                            <!-- create_user_model start-->
+
+                            {% include 'business/supliers/update_supliers_model.html' %}
+                            <!-- create_user_model end-->
+                        </div>
+                    </div>
+
+                </div>
+
+            </main>
+            {% include "partials/footer.html" %}
+        </div>
+    </div>
+
+
+
+
+    <script>
+
+        $(document).ready(function () {
+
+            business_name = '{{request.user.business.slug}}'
+            // $( "td" ).size();
+            var table = $("#employees_table").DataTable({
+                lengthChange: true,
+
+                dom: 'lBfrtip',//Blfrtip //lBfrtip
+                buttons: [
+                    'excel', 'print',
+
+                ],
+
+                ajax: `/business/all-supliers/`,
+                "columns": [
+                    { "data": "name" },
+                    { 'data': 'email' },
+                    { "data": "phone" },
+                    { 'data': 'description' },
+                    { "data": "location" },
+                    // { "data": "available" },
+
+                    // { "data": "is_active" },
+                    // { "data": "date_created" },
+                    // <a class="btn status" onclick="deactivate_activate_user(${row.id})" id='${row.id}' href='#'>'${user_status(row.is_active)}'</a>
+
+                    {
+                        "data": '',
+                        render: (data, type, row) => {
+                            return `
+
+                            <a class='btn btn-light btn-outline-info staff_edit' onclick="edit_suplier(${row.id})"  title='${supliers_is_active(row.available)} ${row.available}' id='${row.id}' href='#'><i class="fas fa-edit ${supliers_is_active_color(row.available)}"></i></a>
+                            `;
+                            // return `<a onclick="deactivate_activate_user()" href='link_to_edit/${row.id}'>update</a>`;
+
+
+                        },
+
+                        rowId: function (response) {
+                            console.log("response", response)
+                            return 'id_' + response;
+                        },
+
+
+                    },
+
+                ],
+
+
+
+            })
+
+        })
+
+
+
+
+
+        function supliers_is_active(status) {
+            return (status ? 'Active User' : 'User is not Active');
+        }
+
+        // user status color
+        function supliers_is_active_color(status) {
+
+            return (status ? '' : 'text-danger');
+        }
+
+
+
+
+
+
+
+        function edit_suplier(suplier_id) {
+            // console.log(suplier_id)
+            $("#edit_Suplier_model_btn").click();
+            $.get(`/business/update-supplier/${suplier_id}/`, function (data) {
+                // console.log(data)
+
+                console.log(data.supplier.name)
+                // user_id = data.employee.id,
+                    $("#Suplier_model_title").text(`UPDATE ${data.supplier.name}`).addClass('text-uppercase')
+                $('#editSuplierName').val(data.supplier.name)
+                $('#editSuplierEmail').val(data.supplier.email)
+                $('#editSuplierPhone').val(data.supplier.phone)
+                $('#editSuplierDescription').val(data.supplier.description)
+                $('#editSuplierLocation').val(data.supplier.location)
+                $('#editSuplieravailable').prop('checked', data.supplier.available)
+
+                localStorage.setItem('id', suplier_id)
+                // $("#editIsActive").title('yes no')
+                // document.getElementById('active_status').title = user_is_active(data.employee.is_active)
+                // console.log('user id ',user_id)
+
+                
+            });
+
+        }
+
+    </script>
+
+
+
+
+
+
+    {% endblock content %}

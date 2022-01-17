@@ -1,0 +1,252 @@
+<!-- Modal To Create product start-->
+
+
+<button id="editProductBtn" type="button" style="float: right;" class=" btn btn-primary btn-sm" data-toggle="modal"
+    data-target="#modelProductEdit">
+    <i class="fa fa-plus" aria-hidden="true"></i> Update Product
+</button>
+
+
+
+<div class="modal fade modelProduct" id="modelProductEdit" data-backdrop="static" data-keyboard="true" tabindex="-1"
+    role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document" id="">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <h3 class="my-4 text-center font-weight-light" id="">
+                        Update Product</h3>
+
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="">
+                    <form method="POST" action="#" id="EditProductForm">
+                        {% csrf_token %}
+                        <div class="mb-3 row">
+                            <div class="col-md-6">
+                                <div class="mb-3 form-floating mb-md-0">
+                                    <input class="form-control" id="inputnameEdit" type="text" name="productname"
+                                        placeholder="Enter Product Name" required />
+                                    <label for="inputnameEdit">Name</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input class="form-control" id="inputPriceEdit" type="number" name=price step=".01"
+                                        required placeholder="price" />
+                                    <label for="inputPriceEdit">Price</label>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="mb-3 row">
+                            <div class="col-md-6">
+                                <div class="mb-3 form-floating mb-md-0">
+                                    <input class="form-control" id="inputQuantityEdit" type="number" name="quantity"
+                                        placeholder="quantity" required />
+                                    <label for="inputQuantityEdit">Quantity</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+
+                                <div class="form-floating">
+                                    <input class="form-control" id="inputDescriptionEdit" type="text" name="description"
+                                        placeholder="Enter Description (optional)" />
+                                    <label for="inputDescriptionEdit">Description</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3 row">
+                            <div class="col-md-6">
+                                <div class="form-floating">
+
+                                    <select class="form-control inputUnit" id="inputUnitEdit" name="unit"
+                                        placeholder="Select Unit">
+                                        <!-- <option value="">Select Unit</option> -->
+                                    </select>
+
+
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+
+                                <div class="form-floating">
+
+                                    <select class="form-control inputSupplier" id="inputSupplierEdit" name="suppliers[]"
+                                        multiple="multiple" placeholder="Select suppliers">
+                                    </select>
+                                    <small class="text-muted">Hold down “Control”, or “Command” on a Mac, to select
+                                        multiple.</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3 row">
+                            <div class="col-md-6">
+                                <div class="mb-3 form-floating mb-md-0">
+                                    <input class="form-control" id="inputStockLevelEdit" type="number"
+                                        name="stock_level" value="" autocomplete='off'
+                                        placeholder="Enter Stock Level" />
+                                    <label for="inputStockLevelEdit">Stock Level</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3 form-floating mb-md-0">
+                                    <input class="form-control" id="inputShelfNumberEdit" type="text" name="shelfNumber"
+                                        autocomplete='off' placeholder="Enter Shelf Number" />
+                                    <label for="inputShelfNumberEdit">Shelf Number</label>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="mb-3 row">
+                            <div class="col-md-3 ">
+                                <div class="mb-3 form-floating mb-md-0">
+                                    <div class="btn-group-toggle" data-toggle="buttons" id="has_expire_dateEdit">
+                                        <label class="btn btn-muted">
+                                            <input type="checkbox" id="inputHasExpireDateEdit"> Has Expire Date
+                                        </label>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="col-md-3 " id="months_to_expireEdit">
+                                <div class="mb-3 form-floating mb-md-0 ">
+                                    <input class="form-control" id="inputMonthsToExpireEdit" type="number"
+                                        name="months_to_expire" placeholder="To Expire Edit" />
+                                    <label for="inputMonthsToExpireEdit">Months To Expire</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6 " id='expireDateColEdit'>
+                                <div class="mb-3 form-floating mb-md-0">
+                                    <input class="form-control" id="inputExpireDateEdit" type="date" name="expire_date"
+                                        autocomplete='off' placeholder="Expire Data" />
+                                    <label for="inputExpireDateEdit">Expire Date</label>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="mt-4 mb-0">
+                            <div class="d-grid"> <button class="btn btn-primary btn-block" id="user_model_submitEdit"
+                                    type="submit">Update Product</button> </div>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- Model To Create product End-->
+
+
+<script>
+
+
+
+
+
+
+
+
+    // update product
+
+    $('#EditProductForm').on('submit', function (e) {
+
+        e.preventDefault();
+
+
+        const product_id = sessionStorage.getItem('product_id');
+
+
+        console.log("product_id", product_id)
+        const url = `/store/product-home/product-list/${product_id}/`
+
+        $.ajax({
+            url: url,
+            type: 'POST',
+
+            data: {
+                name: $('#inputnameEdit').val(),
+                price: $('#inputPriceEdit').val(),
+                description: $("#inputDescriptionEdit").val(),
+                quantity: $('#inputQuantityEdit').val(),
+                unit: $('#inputUnitEdit').val(),
+                supplier: $('#inputSupplierEdit').val(),
+                stock_level: $('#inputStockLevelEdit').val(),
+                shelf_number: $("#inputShelfNumberEdit").val(),
+                has_expire_date: $('#inputHasExpireDateEdit').is(':checked'),
+                months_to_expire: $("#inputMonthsToExpireEdit").val(),
+                expire_date: $("#inputExpireDateEdit").val(),
+                csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
+
+            },
+
+
+            success: function (res) {
+                // console.log("res", res);
+                // console.log(url)
+
+                category_url = localStorage.getItem('category_url');
+
+                displayProductTable(category_url)
+                getProduct(product_id)
+                $("#inputUnitEdit").empty()
+                $("#inputSupplierEdit").empty()
+
+
+
+
+                if (res.data) {
+                    swallAlerts('created successfully', "success", "bottom-end", 3000, false);
+                    // document.getElementById('EditProductForm').reset();
+
+                }
+                else if (res.error) {
+                    swallAlerts('error try again', 'error', "bottom-end", 8000, false);
+
+
+                }
+            },
+            error: function () {
+                console.log('error try again')
+
+
+            }
+        })
+
+    })
+
+
+
+
+    $(function () {
+
+
+        // $("#has_expire_dateEdit").on("click", function () {
+
+        //     has_expire_date = $('#inputHasExpireDateEdit').is(':checked')
+
+        //     if (has_expire_date) {
+
+        //         $("#months_to_expireEdit").fadeOut()
+        //         $("#inputMonthsToExpireEdit").val('')
+        //         $("#expireDateColEdit").fadeOut()
+        //         $("#inputExpireDateEdit").val('')
+        //     }
+
+        //     else {
+
+        //         $("#months_to_expireEdit").fadeIn()
+
+        //         $("#expireDateColEdit").fadeIn()
+        //     }
+        // })
+
+    })
+
+</script>

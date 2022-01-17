@@ -1,0 +1,239 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+
+{% endblock title %}
+
+{% block content %}
+<script src="{% static 'js/font-awsome-all.min.js' %}"></script>
+
+
+<body class="sb-nav-fixed">
+    <!-- nav start-->
+    {% include "partials/navbar.html" %}
+
+    <!-- nav end -->
+    <div id="layoutSidenav">
+        <!-- Side bar Start -->
+        {% include "partials/sidebar.html" %}
+
+        <!-- side bar end -->
+
+
+        <div id="layoutSidenav_content">
+            <main>
+                <div class="px-4 container-fluid">
+                    <h1 class="mt-4">Employees</h1>
+                    <ol class="mb-4 breadcrumb">
+                        <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
+                        <li class="breadcrumb-item active">Employees</li>
+                    </ol>
+
+                    <div class="mb-4 card">
+                        <div class="card-header text-uppercase fw-bolder">
+                            <i class="fas fa-table me-1"></i>
+                            Employees | {{request.user.business.name}}
+                            <!-- Button trigger modal -->
+
+                            <button style="float: right;" type="button" class="btn btn-primary btn-md"
+                                id="user_model_btn" data-toggle="modal" data-target="#create_user_model">
+                                <i class="fa fa-plus" aria-hidden="true"></i>
+                                New Employee
+                            </button>
+
+                        </div>
+                        <div class="card-body">
+                            <table id="employees_table" class="table table-striped table-hover styled-table">
+                                <thead class="table-active">
+                                    <tr>
+                                        <th>Username</th>
+                                        <th>First Name</th>
+                                        <th>Last Name</th>
+                                        <th>Email</th>
+                                        <th>Phone.</th>
+                                        <th>Position</th>
+                                        <!-- <th>Active</th> -->
+                                        <!-- <th>Registered On</th> -->
+                                        <th></th>
+
+                                    </tr>
+                                </thead>
+
+
+
+                                <tbody>
+                                    <form>
+                                        {% csrf_token %}
+                                    </form>
+
+
+                                </tbody>
+
+                                <tfoot>
+                                    <tr>
+                                        <th>Username</th>
+                                        <th>First Name</th>
+                                        <th>Last Name</th>
+                                        <th>Email</th>
+                                        <th>Phone.</th>
+                                        <th>Position</th>
+
+                                        <th></th>
+
+                                    </tr>
+                                </tfoot>
+                            </table>
+                            <!-- create_user_model start-->
+                            {% include 'accounts/create_user_account_model.html' %}
+                            <!-- create_user_model end-->
+
+                            <!-- create_user_model start-->
+
+                            {% include 'accounts/update_user_account_model.html' %}
+                            <!-- create_user_model end-->
+                        </div>
+                    </div>
+
+                </div>
+
+            </main>
+            {% include "partials/footer.html" %}
+        </div>
+    </div>
+
+
+
+
+    <script>
+
+        $(document).ready(function () {
+
+            business_name = '{{request.user.business.slug}}'
+            // $( "td" ).size();
+            var table = $("#employees_table").DataTable({
+                lengthChange: true,
+
+                dom: 'lBfrtip',//Blfrtip //lBfrtip
+                buttons: [
+                    'excel', 'print'
+
+                ],
+
+                ajax: `/accounts/employees/${business_name}/`,
+                "columns": [
+                    { "data": "username" },
+                    { "data": "first_name" },
+                    { "data": "last_name" },
+                    { "data": "email" },
+                    { "data": "phone" },
+                    { "data": "position__name" },
+                    // { "data": "is_active" },
+                    // { "data": "date_created" },
+                    // <a class="btn status" onclick="deactivate_activate_user(${row.id})" id='${row.id}' href='#'>'${user_status(row.is_active)}'</a>
+
+                    {
+                        "data": '',
+                        render: (data, type, row) => {
+                            return `
+
+                            <a class='btn btn-light btn-outline-info staff_edit' onclick="edit_user(${row.username})"  title='${user_is_active(row.is_active)}' id='${row.username}' href='#'><i class="fas fa-edit ${user_is_active_color(row.is_active)}"></i></a>
+                            `;
+                            // return `<a onclick="deactivate_activate_user()" href='link_to_edit/${row.id}'>update</a>`;
+
+
+                        },
+
+                        rowId: function (response) {
+                            console.log("response", response)
+                            return 'id_' + response;
+                        },
+
+
+                    },
+
+                ],
+
+
+
+            })
+
+        })
+
+
+
+
+
+        function user_is_active(status) {
+            return (status ? 'Active User' : 'User is not Active');
+        }
+
+        // user status color
+        function user_is_active_color(status) {
+
+            return (status ? '' : 'text-danger');
+        }
+
+
+
+        // load users position to select field
+        $(document).ready(function () {
+
+            $.get("/accounts/user_groups/", function (data) {
+                // console.log(data.groups[0].name, data.groups[0].id, data.groups[1].name, data.groups[1].id)
+
+                for (var index = 0; index <= data.groups.length; index++) {
+                $('#inputPosition').append('<option value="' + data.groups[index].id + '">' + data.groups[index].name + '</option>');
+                $('#editPosition').append('<option value="' + data.groups[index].id + '">' + data.groups[index].name + '</option>');
+                // $("#inputPosition").select2({
+                //     placeholder:'Select Position',
+                //     dropdownParent: $('#create_employee_model')
+
+                // });
+
+                }
+            });
+
+
+        });
+
+
+
+        function edit_user(user) {
+            // console.log(user.id)
+            $("#update_model_btn").click();
+            $.get(`/accounts/employee/${user.id}/`, function (data) {
+                // console.log(data)
+
+                // console.log(data.employee.id)
+                user_fullname = `${data.employee.first_name} ${data.employee.last_name}`.toUpperCase()
+                $("#update_model_title").text(`UPDATE ${user_fullname} ACCOUNT`)
+                user_id = data.employee.id,
+                    $('#editUsername').val(data.employee.username),
+                    $('#editIsActive').prop('checked', data.employee.is_active),
+                    $('#editFirstName').val(data.employee.first_name),
+                    $('#editLastName').val(data.employee.last_name),
+                    $('#editEmail').val(data.employee.email),
+                    $('#editPhone').val(data.employee.phone)
+                // $(`#editPosition option[value=${data.employee.position_id}]`).attr('selected','selected')   
+                // document.getElementById('editPosition').selectedIndex= data.employee.position_id   
+                $("#editPosition").prop('selectedIndex', data.employee.position_id)
+
+                localStorage.setItem('id', user_id)
+                // $("#editIsActive").title('yes no')
+                // document.getElementById('active_status').title = user_is_active(data.employee.is_active)
+                // console.log('user id ',user_id)
+            });
+
+        }
+
+
+       
+        
+
+    </script>
+
+
+
+
+
+    {% endblock content %}

@@ -1,0 +1,241 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+
+{% endblock title %}
+
+{% block content %}
+<script src="{% static 'js/font-awsome-all.min.js' %}"></script>
+<script src="{% static 'js/jquery-ui.js' %}"></script>
+<link rel="stylesheet" href="{% static 'css/store/store.css' %}">
+
+<body class="sb-nav-fixed">
+    <!-- nav start-->
+    {% include "partials/navbar.html" %}
+
+    <!-- nav end -->
+    <div id="layoutSidenav">
+        <!-- Side bar Start -->
+        {% include "partials/sidebar.html" %}
+
+        <!-- side bar end -->
+
+
+        <div id="layoutSidenav_content" class="">
+            <main>
+                <div class="px-4 container-fluid">
+                    <h1 class="mt-4">Categories</h1>
+                    <ol class="mb-4 breadcrumb">
+                        <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
+                        <li class="breadcrumb-item active ">Category</li>
+                    </ol>
+
+                    <div class="mb-4 border card border-primary ">
+                        <div class="card-header text-uppercase fw-bolder">
+                            <i class="fas fa-table me-1"></i>
+                            Categories | Home
+                                
+                            <div style="float: right">
+                               
+                            <a class="btn btn-dark btn-sm text-uppercase" href="#" onclick="createPDF('{{request.user.business.name|upper}} INVENTORY ITEMS')" title="print" data-toggle="tooltip" data-placement="top"><i class="fa fa-print" aria-hidden="true"></i></a>
+                            <a class="btn btn-dark btn-sm" href="#" onclick="createExcel()" title="save to excel" data-toggle="tooltip" data-placement="top"><i class="fa fa-file-excel" aria-hidden="true"></i></a>
+                         
+                            </div>
+                           
+                        </div>
+                        <div class="card-body ">
+
+
+
+                            <div class="container " style="background-color:whitesmoke">
+
+                                <div class="row">
+                          
+                                    <div class="" id="">
+                                       
+
+
+
+
+
+                                        <div class="" style="float: right">
+                                            
+                                            <input type="search"  name="" id="product_search" placeholder="quick search ..">
+                                           
+            
+                                        </div>
+                                            <br>
+                                        
+
+                                   
+                                    </div>
+
+
+                                 
+                                    <h4 class="text-center text-uppercase font-weight-bolder" id="store_order_heading">{{request.user.business.name}} INVENTORY ITEMS</h4>
+
+                                    <div id="print_table">
+                              
+                                       
+                                    <table class="table table-hover styled-table table-bordered " id="all_products" width="100%" cellpadding="6" cellspacing="0" style="page-break-before: always; page-break-inside: avoid;margin-bottom: 1px">
+                                        <thead> 
+                                        <col width="64*"/>
+                                    
+                                        <col width="64*"/>
+                                    
+                                        <col width="64*"/>
+                                    
+                                        <col width="64*"/>
+                                        <col width="64*"/>
+                                        <col width="64*"/>
+                                        <col width="64*"/>
+                                    
+                                        <col width="64*"/>
+                                    
+                                        <col width="64*"/>
+                                    
+                                        <col width="64*"/>
+                                        <col width="64*"/>
+                                        <col width="64*"/>
+                                        <col width="64*"/>
+                                    
+                                        <col width="64*"/>
+                                        <col width="64*"/>
+                                        <col width="64*"/>
+                                        
+                                        <tr>
+                                            
+                                            {% for categories in category %}
+                                            <td class="" id="store_states"  colspan="5" width="100%" valign="top" style="border: 0px double #808080; padding: 0.04in"><p align="center" id="">
+                                                <b class="text-center">
+                                                    <div class="bg-white lead">GENERIC NAME : {{categories.generic.name}}</div>
+                                                    <div class="bg-white lead">CATEGORY: {{categories.name}} ({{categories.categories.count}})</div>
+                                               
+                                                </b> <hr>    
+                                            </td> 
+                                            
+                                        </tr>
+                                     
+                                          
+                                       
+                                        <tr valign="top">
+                                            <td width="15%" style="border-top: none; border-bottom: 1px double #808080; border-left: 1px double #808080; border-right: none; padding-top: 0in; padding-bottom: 0.04in; padding-left: 0.04in; padding-right: 0in"><p align="center">
+                                                #</p>
+                                            </td>
+                                            <td width="15%" style="border-top: none; border-bottom: 1px double #808080; border-left: 1px double #808080; border-right: none; padding-top: 0in; padding-bottom: 0.04in; padding-left: 0.04in; padding-right: 0in"><p align="center">
+                                                 Name</p>
+                                            </td>
+                                            <!-- <td  class="trace"width="30%" style="border-top: none; border-bottom: 1px double #808080; border-left: 1px double #808080; border-right: none; padding-top: 0in; padding-bottom: 0.04in; padding-left: 0.04in; padding-right: 0in"><p align="center">
+                                                            Original Quantity</p>
+                                            </td> -->
+                                            <td width="10%" style="border-top: none; border-bottom: 1px double #808080; border-left: 1px double #808080; border-right: 1px double #808080; padding-top: 0in; padding-bottom: 0.04in; padding-left: 0.04in; padding-right: 0.04in"><p align="center">
+                                              Old Stock  </p>
+                                            </td>
+                                           
+                                           
+                                            <td class="trace" width="30%" style="border-top: none; border-bottom: 1px double #808080; border-left: 1px double #808080; border-right: 1px double #808080; padding-top: 0in; padding-bottom: 0.04in; padding-left: 0.04in; padding-right: 0.04in"><p align="center">
+                                              Received Stock </p>
+                                            </td>
+                                            <td class="trace" width="30%" style="border-top: none; border-bottom: 1px double #808080; border-left: 1px double #808080; border-right: 1px double #808080; padding-top: 0in; padding-bottom: 0.04in; padding-left: 0.04in; padding-right: 0.04in"><p align="center">
+                                              New Stock </p>
+                                            </td>
+                                            
+                                            
+                                        </tr>
+
+                                    </thead>
+                                        
+                                    <tbody id="products_all">
+                                       
+                                     
+                                        {% for products in categories.categories.all %}
+                                      
+                                        <tr valign="top">
+                                            <td width="15%" style="border-top: none; border-bottom: 1px double #808080; border-left: 1px double #808080; border-right: none; padding-top: 0in; padding-bottom: 0.04in; padding-left: 0.04in; padding-right: 0in"><p align="center">
+                                                {{forloop.counter}}</p>
+                                            </td>
+                                            <td width="15%" style="border-top: none; border-bottom: 1px double #808080; border-left: 1px double #808080; border-right: none; padding-top: 0in; padding-bottom: 0.04in; padding-left: 0.04in; padding-right: 0in"><p align="center">
+                                                 {{products.name}}</p>
+                                            </td>
+                                           
+                                            <td width="10%" style="border-top: none; border-bottom: 1px double #808080; border-left: 1px double #808080; border-right: 1px double #808080; padding-top: 0in; padding-bottom: 0.04in; padding-left: 0.04in; padding-right: 0.04in" sdval="24" sdnum="1033;"><p align="center">
+                                                {{products.product}}</p>
+                                            </td>
+                                            <td class="trace" width="10%" style="border-top: none; border-bottom: 1px double #808080; border-left: 1px double #808080; border-right: none; padding-top: 0in; padding-bottom: 0.04in; padding-left: 0.04in; padding-right: 0in"><p align="center">
+                                              {{products.quantity}}</p>
+                                          </td>
+                                          <td class="trace" width="10%" style="border-top: none; border-bottom: 1px double #808080; border-left: 1px double #808080; border-right: none; padding-top: 0in; padding-bottom: 0.04in; padding-left: 0.04in; padding-right: 0in"><p align="center">
+                                            {{products.original_stock}}</p>
+                                        </td>
+                                           
+                                           
+                                            
+                                            <!-- <td class="trace" width="25%" style="border-top: none; border-bottom: 1px double #808080; border-left: 1px double #808080; border-right: 1px double #808080; padding-top: 0in; padding-bottom: 0.04in; padding-left: 0.04in; padding-right: 0.04in" sdval="24" sdnum="1033;"><p align="center">
+                                                {{requested_items.date_updated}}</p>
+                                            </td> -->
+                                        </tr>
+                                     
+                                        
+                                        {% endfor %}
+                                        {% empty %}
+                                        <p class="text-danger">no result found</p>
+                                    </tbody>
+                                        
+                                        {% endfor %} 
+                                   
+                                    </table>
+                                 
+                                </div>
+                        </div>
+                    </div>
+                  
+                    </div>
+                    
+                    
+                                    <!-- test table end -->
+                                </div>
+                            </div>
+                           
+
+                           
+
+
+                        </div>
+                    </div>
+
+                </div>
+
+            </main>
+            {% include "partials/footer.html" %}
+        </div>
+    </div>
+
+
+
+<script>
+
+print_table
+
+
+
+// live search on table
+
+$(document).ready(function () {
+
+    // $('#all_products').DataTable()
+    
+    $("#product_search").on("keyup", function () {
+        var value = $(this).val().toLowerCase();
+        $("#products_all  tr").filter(function () {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+    });
+});
+
+
+</script>
+
+
+    {% endblock content %}
+
+

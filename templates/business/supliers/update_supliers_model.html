@@ -1,0 +1,168 @@
+         <!-- Modal To Create User Account-->
+         <button style="float: right;" type="button" class="btn btn-primary btn-sm"
+         id="edit_Suplier_model_btn" data-toggle="modal" data-target="#edit_Suplier_model">
+         New Suplier
+     </button>
+
+         <div class="modal fade" id="edit_Suplier_model" tabindex="-1" role="dialog"
+         aria-labelledby="modelTitleId" aria-hidden="true">
+         <div class="modal-dialog modal-dialog-centered modal-lg" role="document" id="mymodel">
+             <div class="modal-content">
+                 <div class="modal-header">
+                     <h5 class="modal-title">
+                         <h3 class="text-center font-weight-light my-4" id="Suplier_model_title">
+                             Update Suplier</h3>
+
+                     </h5>
+                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                         <span aria-hidden="true">&times;</span>
+                     </button>
+                 </div>
+                 <div class="modal-body">
+                     <div class="">
+                         <form method="POST" action="#" id="supplierEditForm">
+                             {% csrf_token %}
+                             <div class="row mb-3">
+                                 <div class="col-md-6">
+                                     <div class="form-floating mb-3 mb-md-0">
+                                         <input class="form-control" id="editSuplierName"
+                                             type="text" name="username"
+                                             placeholder="Enter user Username" required/>
+                                         <label for="editSuplierName">Suplier Name</label>
+                                     </div>
+                                 </div>
+                                 <div class="col-md-6">
+                                     <div class="form-floating">
+                                         <input class="form-control" id="editSuplierEmail" type="email"
+                                             name=email placeholder="name@domain.com" />
+                                         <label for="editSuplierEmail">Email address</label>
+                                     </div>
+                                 </div>
+                             </div>
+                             
+                             <div class="row mb-3">
+                                 <div class="col-md-6">
+                                     <div class="form-floating mb-3 mb-md-0">
+                                         <input class="form-control" id="editSuplierPhone"
+                                             type="text" name="phone"
+                                             placeholder="Enter Suplier Phone Number" required/>
+                                         <label for="editSuplierPhone">Phone</label>
+                                     </div>
+                                 </div>
+                                 <div class="col-md-6">
+
+                                     <div class="form-floating">
+                                         <input class="form-control" id="editSuplierLocation"
+                                             type="text" name="location"
+                                             placeholder="Enter Suplier Location" required/>
+                                         <label for="editSuplierLocation">Location</label>
+                                     </div>
+                                 </div>
+                             </div>
+                             <div class="row mb-3">
+                                 <div class="col-md-6">
+                                     <div class="form-floating mb-3 mb-md-0">
+                                         <input class="form-control" id="editSuplierDescription" type="text"
+                                             name="phone" placeholder="Description" />
+                                         <label for="editSuplierDescription">Description</label>
+                                     </div>
+                                 </div>
+                                 
+                                 <div class="col-md-6">
+                                    <div class="form-floating">
+                                        <div  class="form-check" title="marks user as active or inactive">
+                                            <input id="editSuplieravailable" class="form-check-input" type="checkbox" name="" value="true">
+                                            <label for="editSuplieravailable" class="form-check-label">Active Suplier</label>
+                                        </div>
+                                    </div>
+                                </div>
+                             </div>
+                            
+                             <div class="mt-4 mb-0">
+                                 <div class="d-grid"> <button class="btn btn-primary btn-block"
+                                         id="suplier_model_submit btn-block" type="submit">Update
+                                         Suplier</button> </div>
+                             </div>
+
+                         </form>
+                     </div>
+                 </div>
+
+             </div>
+         </div>
+     </div>
+     <!-- Model To Create User Account End-->
+
+<style>
+    #edit_Suplier_model_btn{
+        display: none;
+    }
+</style>
+
+     <script>
+        function user_is_active(status) {
+                  return (status ? 'Active Suplier' : 'Suplier is not Active');
+              }
+          // update user
+      
+          $('#supplierEditForm').on('submit', function (ev) {
+              ev.preventDefault();
+              
+              // console.log($('#editUsername').val(),)
+              suplier_id = localStorage.getItem('id')
+            //   console.log('localStorage ', localStorage.getItem('id'))
+      
+      
+              $.ajax({
+                  url: `/business/update-supplier/${suplier_id}/`,
+                  type: 'POST',
+                  data: {
+                      name: $('#editSuplierName').val(),
+                      email: $('#editSuplierEmail').val(),
+                      phone: $('#editSuplierPhone').val(),
+                      available: $('#editSuplieravailable').is(':checked'), 
+                      location: $('#editSuplierLocation').val(),
+                      description: $('#editSuplierDescription').val(),
+                      csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
+                  },
+                  beforeSend: function () {
+      
+                  },
+                  success: function (res) {
+                      // console.log("res", res);
+                      $("#Suplier_model_title").text(`UPDATE ${res.supplier_name}`).addClass('text-uppercase')
+
+      
+                      if (res.message) {
+                         
+                          swallAlerts(`${res.message}`, 'success', "bottom-end", 3000, false);
+
+      
+                          $('#employees_table').DataTable().ajax.reload();
+                          // $('body, html').animate({ scrollTop: $('form').offset().top }, 'slow');
+                    //    $('#editSuplierLocation').prop('checked', false)
+                         
+                      //  document.getElementById('active_status').title = user_is_active(res.isActive);
+      
+                      
+                      }
+                      else {
+                        swallAlerts(`${res.error}`, 'success', "bottom-end", 3000, false);
+
+                      }
+                  },
+                  error: function () {
+                      console.log('error')
+      
+      
+                  }
+              })
+      
+          })
+      
+      
+      </script>
+
+
+
+

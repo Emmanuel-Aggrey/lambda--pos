@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+    <!-- <link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script> -->
+</head>
+
+
+<body>
+
+    
+    {% block content %}
+        
+        
+    <table id="example" class="table">
+        <thead>
+            <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+                <th>Position</th>
+                <th>Phone</th>
+                <th>Admin</th>
+                <th>Date Added</th>
+            </tr>
+        </thead>
+        <tfoot>
+            <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+                <th>Position</th>
+                <th>Phone</th>
+                <th>Admin</th>
+                <th>Date Added</th>
+            </tr>
+        </tfoot>
+        <tbody>
+
+
+
+        </tbody>
+    </table>
+
+    
+    <script src="{% static 'js/api_calling.js' %}"></script>
+
+    <script>
+        $(document).ready(function () {
+            callApi()
+            $('#example').DataTable({
+                "ajax": '/accounts/employees/lambda',
+                "columns": [
+                { 'employees': 'first_name' },
+                    { 'employees': 'last_name' },
+                    { 'employees': 'email' },
+                    { 'employees': 'position' },
+                    { 'employees': 'phone' },
+                    { 'employees': 'is_staff' },
+                    { 'employees': 'date_joined' }
+
+                ]
+            });
+        });
+        $(document).ready(function() {
+    callApi()
+})
+
+
+
+
+    </script>
+</body>
+
+</html>    {% endblock content %}
+
+
+<!-- $.ajax({
+    url: `/accounts/add_user_to_group/${user.id}/`,
+    type: 'POST',
+    data: {
+
+        username: user.id,
+        csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
+
+    },
+    success: function (data) {
+        // console.log(data, user.id)
+    }
+}) -->

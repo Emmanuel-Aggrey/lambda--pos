@@ -1,0 +1,35 @@
+
+    .list-group-item:hover{
+        font-weight:bolder;
+        cursor: pointer;
+        background-color:whitesmoke;
+    }
+
+    .list-group-item:active{
+        background-color: rgb(181, 194, 194);
+    }
+
+   
+
+  
+#myList{
+    height:500px; width:100%;
+    overflow:hidden; overflow-y:scroll;
+    font-style: oblique;
+    font-weight: bold;
+
+}
+
+
+
+
+.my-custom-scrollbar {
+    position: relative;
+    height: 500px;
+    overflow: auto;
+    width: 870px;
+    }
+    .table-wrapper-scroll-y {
+    display: block;
+    }
+

@@ -1,0 +1,91 @@
+  <!-- Button trigger modal -->
+
+  <button id="editGeneric" type="button" style="float: right;" class=" btn btn-primary btn-sm" data-toggle="modal" data-target="#modelGenericEdit">
+    <i class="fa fa-plus" aria-hidden="true"></i> Add New 
+   </button>
+  <!-- Modal -->
+  <div class="modal fade" id="modelGenericEdit" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title">Edit Generic</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+        </div>
+        <div class="modal-body">
+            <form id="edit_generic_form" action="POST">
+                {% csrf_token %}
+                <div class="form-group">
+                  <label for="generics_name_edit" class="col-form-label">Edit Generic:</label>
+                  <input type="text" class="form-control" id="generics_name_edit" required>
+                </div>
+                <div class="form-group">
+                  <label for="generics_description_edit" class="col-form-label">Description:</label>
+                  <textarea class="form-control" id="generics_description_edit"></textarea>
+                </div>
+           
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit"  class="btn btn-primary">Save</button>
+        </div>
+      </form>
+    </div>
+</div>
+</div>
+
+
+
+<script>
+
+
+
+$('#edit_generic_form').on('submit', function (event) {
+  event.preventDefault();
+  var generic= localStorage.getItem("generic_id")
+  // console.log("generic_id",generic)
+
+  $.ajax({
+      url: `/store/generic-home/generic-list/${generic}/`,
+      type: 'POST',
+      data: {
+       
+          name: $('#generics_name_edit').val(),//.addClass('text-uppercase'),
+          description: $('#generics_description_edit').val(),
+          generic:generic,
+          csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
+
+      },
+
+      success: function (data) {
+        //   console.log(data);
+        $("#myList").animate('swing').empty()
+                get_generics()
+
+          if (data) {
+              swallAlerts('updated successfully', 'success', "bottom-end", 3000, false);
+          }
+        
+      },
+
+      error: function (data){
+          console.log(data)
+        swallAlerts(`${data.responseJSON.name} : ${data.statusText}`, 'error', "bottom-end", 3000, false);
+
+      }
+  });
+})
+
+
+
+
+
+
+</script>
+
+
+
+
+
