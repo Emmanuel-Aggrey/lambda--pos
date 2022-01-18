@@ -1,11 +1,11 @@
 <!-- Modal To Create product start-->
-<div class="modal fade modelProduct" id="modelProductAdd" data-backdrop="static" data-keyboard="false" tabindex="-1"
+<div class="modal fade modelProduct" id="modelProductAdd" data-backdrop="static" data-keyboard="true" tabindex="-1"
     role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document" id="create_product_model">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">
-                    <h3 class="my-4 text-center font-weight-light" id="user_model_title">
+                    <h3 class="my-4 text-center font-weight-light product_title" id="user_model_title">
                         Create New Product</h3>
 
                 </h5>
@@ -172,16 +172,21 @@
 
     // create product
 
+
+
     $('#CreateProductForm').on('submit', function (e) {
 
         e.preventDefault();
 
         // find a way to collect submited data with this
-        var formData = $(this).serialize()
+        // var formData = $(this).serialize()
+
+        loadUnit()
+        loadSupliers()
 
         // console.log(formData)
-        category_url = localStorage.getItem('category_url');
-        url = `/store/products-in-category/${category_url}/`
+        category_id = localStorage.getItem('category_id');
+        url = `/store/products-in-category/${category_id}/`
         $.ajax({
             url: url,
             type: 'POST',
@@ -209,7 +214,12 @@
                 console.log('inputMonthsToExpire >', $("#inputMonthsToExpire").val())
 
 
-                displayProductTable(category_url)
+                const category_name = sessionStorage.getItem('category_name');
+
+
+                $(".product_title").text(category_name)
+
+                displayProductTable(category_id)
                 $("#inputUnit").empty()
                 $("#inputSupplier").empty()
                 // $("#inputExpireDateEdit").fadeOut('fast')

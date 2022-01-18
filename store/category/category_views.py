@@ -12,7 +12,7 @@ from rest_framework import viewsets
 from rest_framework.parsers import JSONParser
 
 
-@api_view(['GET'])
+@api_view(['GET','POST'])
 def category_views(request):
     """
     LIST ALL CATEGORIES, OR CREATE A NEW CATEGORY
@@ -24,6 +24,17 @@ def category_views(request):
 
         serializer = CategorySerializer(generic, many=True)
         return Response(serializer.data)
+
+
+    elif request.method == 'POST':
+        serializer = CategorySerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data,
+                            status=status.HTTP_201_CREATED)
+        return Response(serializer.errors,
+                        status=status.HTTP_400_BAD_REQUEST)
+
 
 
 @api_view(['GET', 'PUT', 'PATCH', 'POST','DELETE'])
@@ -54,7 +65,6 @@ def category_view(request, pk):
     # using this to edit because JQUARY refuses to use PUT request to update
 
     elif request.method == 'POST' and pk:
-        print('its me')
         serializer = CategorySerializer(generic, data=request.data)
 
         if serializer.is_valid():

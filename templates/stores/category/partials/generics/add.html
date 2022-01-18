@@ -8,16 +8,16 @@
 
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">New Generic</h5>
+                <h5 class="modal-title">New Category</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <form id="add_genericForm" action="POST">
+                <form id="add_product_form" action="POST">
                     {% csrf_token %}
                     <div class="form-group">
-                        <label for="generics_name" class="col-form-label">Add Generic:</label>
+                        <label for="generics_name" class="col-form-label">New Category:</label>
                         <input type="text" class="form-control" id="generics_name" required>
                     </div>
                     <div class="form-group">
@@ -42,12 +42,15 @@
 
 
 
-    $('#add_genericForm').on('submit', function (event) {
+    $('#add_product_form').on('submit', function (event) {
         event.preventDefault();
-        const generic_id = localStorage.getItem("generic_id")
+        category_id = localStorage.getItem('category_id');
+        // url: `/store/generic-home/generic-list/`,
+        url = `/store/category-home/category-list/`,
 
         $.ajax({
-            url: `/store/generic-home/generic-list/`,
+
+            url:url,
             type: 'POST',
             data: {
                 name: $('#generics_name').val(),//.addClass('text-uppercase'),
@@ -59,10 +62,10 @@
             success: function (data) {
                 console.log(data);
                 $("#myList").animate('swing').empty()
-                get_generics()
-                if (data) {
+                get_cetegories()
+                if (data.pk) {
                     swallAlerts('Save successfully', 'success', "bottom-end", 3000, false);
-                    document.getElementById('add_genericForm').reset()
+                    document.getElementById('add_product_form').reset()
 
                 }
 

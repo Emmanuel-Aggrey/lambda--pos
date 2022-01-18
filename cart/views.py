@@ -88,7 +88,7 @@ def cart_detail(request):
 
     if items:
         # return JsonResponse({"data":items},safe=False)
-        return Response({"data":items}, status=status.HTTP_200_OK)
+        return Response(items, status=status.HTTP_200_OK)
     else:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
@@ -123,4 +123,4 @@ def cart_length(request):
     }
     # print(len(cart), cart.get_total_price())
 
-    return Response(data=data, status=status.HTTP_204_NO_CONTENT)
+    return Response(data=data, status=status.HTTP_200_OK)

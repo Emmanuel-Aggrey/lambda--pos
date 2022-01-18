@@ -1,59 +1,50 @@
-
-
-// populate list with generics
+// populate list with cetegories
 
 const get_cetegories = () => {
-    
-    $("#categories_div").fadeOut()
-    generic_url= '//store/products-in-category/10/'
-    
-    category_url='/store/category-home/category-list/'
+
+    category_url = '/store/category-home/category-list/'
     $.get(category_url, function (data) {
-        // console.log(data)
-        // <span class="badge bg-primary rounded-pill">${value.get_total_category}</span>
+
 
         var arr = $.each(data, function (key, value) {
-            
+
             return $("#myList").append(`
             <li class='list-unstyled list-group-item my-1 mx-4'  tittle='${value.description}' id=${value.pk} data-name='${value.name}'> ${value.name} 
             
-             <i data-generic='${value.pk}' class="fa fa-edit edit_generic text-dark fx-3 " title="edit" aria-hidden="true" style="float: right;cursor:copy;"></i>
+             <i data-category='${value.pk}' class="fa fa-edit edit_category text-dark fx-3 " title="edit" aria-hidden="true" style="float: right;cursor:copy;"></i>
 
             </li>
             `)
-           
+
         });
-       
 
     });
 }
 
 
-// GET ALL GENERICS WHEN PAGE STARTS
+// GET ALL CATEGORIES WHEN PAGE STARTS
 $(function () {
     get_cetegories()
-    edit_generic()
-    // $("#products_div").fadeOut()
-    // $( "#products_div" ).dialog({ autoOpen: true });
-    
-    
+    edit_category()
+    $("#search_div").fadeOut()
+
+
 });
-
-
-
-
 
 $(function () {
 
+
+
     // $("#myList ,li").click(function (e) {
-        $('#myList').delegate('.list-group-item', 'click', function (e) {
+    $('#myList').delegate('.list-group-item', 'click', function (e) {
 
 
-        // $( "#products_div" ).dialog({ autoOpen: false });
+        // $( "#products_div" ).dialog({ autoOpen: true });
 
 
         e.preventDefault();
-        $("#categories_div").fadeIn()
+        $("#search_div").fadeIn();
+
 
         var category_id = $(e.target).attr('id');
         var data_name = $(e.target).attr('data-name');
@@ -62,12 +53,10 @@ $(function () {
         sessionStorage.setItem('category_name', data_name)
 
 
-        // const category_name = sessionStorage.getItem('category_name');
 
         $("#add_category_title").text(`ADD TO ${data_name}`).addClass("text-uppercase")
 
-        // console.log("category_id", category_id, data_name)
-            // url ="/store/products-in-category/10/";
+
         url = `/store/products-in-category/${category_id}/`,
             $.ajax({
                 url: url,
@@ -75,7 +64,7 @@ $(function () {
 
                 success: function (response) {
                     console.log(response)
-                    populateCategoryTable(response)
+                    populateProductTable(response)
 
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
@@ -85,21 +74,15 @@ $(function () {
                 }
             });
 
-
     });
 });
 
 
-
-
-
-
-
-const populateCategoryTable = (data) => {
+const populateProductTable = (data) => {
     $("#items_search").focus();
     const category_name = sessionStorage.getItem('category_name');
 
-    $("#categories_title").text(category_name)
+    $("#product_title").text(category_name)
     var table = "";
 
     for (var i in data) {
@@ -109,12 +92,24 @@ const populateCategoryTable = (data) => {
 
         table += "<tr>";
 
-        table += `<td>` + `${parseInt(i) + 1}` + `</td>`
-            + `<td >` + data[i].name + `</td>`
-            + `<td >` + data[i].description + `</td>`
-            + `<td class="edit_category  btn btn-light btn-outline-info"  title="edit items" data-edit="${data[i].pk}">` + `<i class="fa fa-edit  mx-4" title="edit items" style="cursor:pointer"  aria-hidden="true"></i>` + `</td>`
 
-            + `<td class="view_products btn btn-light btn-outline-primary" title="view data"  data-view="${data[i].pk}" data-product-name="${data[i].name}" >` + `<i  class="fa fa-eye mx-4 " style="cursor:pointer"  aria-hidden="true"></i>` + `</td>`
+        table += ``
+            + `<td >` + data[i].name + `</td>`
+            + `<td >` + data[i].price + `</td>`
+            + `<td >` + data[i].quantity + `</td>`
+            + `<td >` + data[i].description + `</td>`
+            + `<td >` + convertNullValues(data[i].unit_name) + `</td>`
+            + `<td >` + data[i].supplier + `</td>`
+            // + `<td >` + data[i].stock_level + `</td>`
+            // + `<td >` + data[i].original_stock + `</td>`
+            + `<td >` + convertNullValues(data[i].shelf_number) + `</td>`
+            // + `<td >` + has_expire_date_(data[i].has_expire_date) + `</td>`
+            + `<td >` + convertNullValues(data[i].expire_date) + `</td>`
+            // + `<td >` + data[i].months_to_expire + `</td>`
+            // + `<td >` + has_expired(data[i].has_expired) + `</td>`
+            + `<td class="edit_product  btn btn-light btn-outline-info"  title="edit items" onclick="getProduct(${data[i].pk})"  data-edit-product="${data[i].pk}">` + `<i class="fa fa-edit  mx-4"  style="cursor:pointer"  aria-hidden="true"></i>` + `</td>`
+
+            + `<td class="">` + `<input type="text" placeholder='quantity' class="add_to_cart" name="${data[i].pk}"  onKeydown="addToCart(${data[i].price})"  style="width:100%;">` + `</td>`
 
 
 
@@ -122,7 +117,7 @@ const populateCategoryTable = (data) => {
     }
 
 
-    document.getElementById("categories_in_generics").innerHTML = table;
+    document.getElementById("products_in_categories").innerHTML = table;
 
     table = document.getElementById("categories_table");
     const table_size = $(".view_products").length
@@ -130,110 +125,58 @@ const populateCategoryTable = (data) => {
 
 
     view_products_table()
-    add_product()
-    edit_category()
 
 }
 
+function edit_category() {
 
 
-
-function edit_generic() {
-
-
-    $('#myList').delegate('.edit_generic', 'click', function (ev) {
+    $('#myList').delegate('.edit_category', 'click', function (ev) {
 
         $("#editGeneric").click();
 
 
-        var category_id = $(this).attr('data-generic');
-        localStorage.setItem('generic_id', category_id)
-        console.log("category_id",category_id)
-        // console.log("generic_id",generic_id)
-        // generic_url =`/store/generic-home/generic-list/${generic_id}/`
-        category_url =`/store/category-home/category-list/${category_id}/`
+        var category_id = $(this).attr('data-category');
+        sessionStorage.setItem('category_id', category_id)
+
+        category_url = `/store/category-home/category-list/${category_id}/`
         $.get(category_url, function (data) {
             $("#generics_name_edit").val(data.name)
             $("#generics_description_edit").val(data.description)
-            $("#categories_div").fadeOut()
 
-            // console.log(data)
 
         });
 
+
     });//end of delegation
+
+
 }//end of function
-
-
-
-
-
-
-
-
-function add_product() {
-
-
-    $('#categories_in_generics').delegate('.add_product', 'click', function () {
-
-        var product_url = $(this).attr('data-add');
-
-        console.log('add_product', product_url);
-
-        // localStorage.setItem('product_id', product_id)
-
-
-        $.ajax({
-            type: 'GET',
-            url: product_url,
-
-
-            success: function (response) {
-                console.log(response)
-
-
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                console.log(jqXHR, textStatus, errorThrown)
-
-            }
-
-        })//end of ajax
-    });//end of delegation
-}//end of function
-
-
-
-
 
 function view_products_table(event) {
 
 
-    $('#categories_in_generics').delegate('.view_products', 'click', function () {
+    $('#products_in_categories').delegate('.view_products', 'click', function () {
         const category_name = sessionStorage.getItem('category_name');
         var product_name = $(this).attr('data-product-name');
-        products = category_name+' > '+product_name
+        products = category_name + ' > ' + product_name
         // $( "#products_div" ).dialog( "open" ).dialog({
-           
+
         //     title: (products),
         //     height:800,
         //     width:1450,
         //     minHeight: 900,
         //     minWidth: 1300,
-            
+
         // })//.effect('shake','fast');
-        
+
 
 
         // $("#products_div").fadeIn()
         var products_url = $(this).attr('data-view');
-      
-
 
         // console.log(products_url)
         localStorage.setItem('category_url', products_url);
-
-        
 
         $.ajax({
             type: 'GET',
@@ -253,45 +196,6 @@ function view_products_table(event) {
         })//end of ajax
     });//end of delegation
 }//end of function
-
-
-
-function edit_category() {
-
-    $('#categories_in_generics').delegate('.edit_category', 'click', function () {
-
-        $("#editCategory").click()
-
-        // $( "#products_div" ).dialog( "close" );
-        
-
-        var category_url = $(this).attr('data-edit');
-        // /store/category-home/category-list/3/
-
-
-        console.log('category_url', category_url);
-
-        localStorage.setItem('category_url', category_url);
-
-        $.ajax({
-            type: 'GET',
-            url: `/store/category-home/category-list/${category_url}/`,
-
-
-            success: function (data) {
-                // console.log(data)
-                $("#category_name_edit").val(data.name);
-                $("#category_description_edit").val(data.description)
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                console.log(jqXHR, textStatus, errorThrown)
-
-            }
-
-        })//end of ajax
-    });//end of delegation
-}//end of function
-
 
 
 function add_category() {
@@ -324,8 +228,6 @@ function view_category() {
 
 }
 
-
-
 // get data into category table after ajax call on add or edit
 
 const displayCategoryTable = (category_id) => {
@@ -337,7 +239,7 @@ const displayCategoryTable = (category_id) => {
 
             success: function (response) {
 
-                populateCategoryTable(response)
+                populateProductTable(response)
                 console.log(response)
 
             },
@@ -350,15 +252,12 @@ const displayCategoryTable = (category_id) => {
 
 }
 
-
-
-
 // live search on table
 
 $(document).ready(function () {
     $("#items_search").on("keyup", function () {
         var value = $(this).val().toLowerCase();
-        $("#categories_in_generics  tr").filter(function () {
+        $("#products_in_categories  tr").filter(function () {
             $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
         });
     });
@@ -377,16 +276,20 @@ $(document).ready(function () {
 });
 
 
-
-
-
-
-
-
-
 // open all products in generic page
-    function openProdcuts() {
-        window.open('/store/products/','', 'width=800,height=800','true')
-        }
-        
+function openProdcuts() {
+    window.open('/store/products/', '', 'width=1000,height=900', 'true')
+}
+
+
+// check if cart table is empty
+const isOpen = $("#cart_div").dialog("isOpen");
+
+
+if (isOpen) {
+    const isEmpty = document.querySelectorAll('#cart_table tr').length < 1;
+    console.log("isEmpty",isEmpty,'isOpen',isOpen)
+    // document.getElementById("cart_post_btn").disabled = false
+}
+
 

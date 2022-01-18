@@ -88,7 +88,7 @@ def product_view(request, pk):
         months_to_expire = data.get('months_to_expire',3)
         expire_date = set_expire_date(data.get('expire_date'))
 
-     
+        print("months_to_expire",months_to_expire)
 
         # product = product
         product.name=name

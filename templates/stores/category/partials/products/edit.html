@@ -1,9 +1,9 @@
 <!-- Modal To Create product start-->
 
 
-<button id="editProductBtn" type="button" style="float: right;" class=" btn btn-primary btn-sm" data-toggle="modal"
+<button id="editProductBtn" type="button" style="float: right;" class=" btn btn-primary btn-sm " data-toggle="modal"
     data-target="#modelProductEdit">
-    <i class="fa fa-plus" aria-hidden="true"></i> Update Product
+    <i class="fa fa-plus" aria-hidden="true"></i> Update Product 
 </button>
 
 
@@ -14,7 +14,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">
-                    <h3 class="my-4 text-center font-weight-light" id="">
+                    <h3 class="my-4 text-center font-weight-light product_title_edit">
                         Update Product</h3>
 
                 </h5>
@@ -160,7 +160,11 @@
         e.preventDefault();
 
 
-        const product_id = sessionStorage.getItem('product_id');
+        const product_id = localStorage.getItem('product_id');
+        category_id = localStorage.getItem('category_id');
+
+
+
 
 
         console.log("product_id", product_id)
@@ -188,12 +192,12 @@
 
 
             success: function (res) {
-                // console.log("res", res);
-                // console.log(url)
+                const category_name = sessionStorage.getItem('category_name');
 
-                category_url = localStorage.getItem('category_url');
+                $(".product_title").text(category_name)
 
-                displayProductTable(category_url)
+                displayProductTable(category_id)
+
                 getProduct(product_id)
                 $("#inputUnitEdit").empty()
                 $("#inputSupplierEdit").empty()

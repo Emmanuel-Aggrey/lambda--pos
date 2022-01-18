@@ -9,7 +9,7 @@
 
     <div class="modal-content">
         <div class="modal-header">
-            <h5 class="modal-title">Edit Generic</h5>
+            <h5 class="modal-title">Edit Category</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -44,17 +44,19 @@
 
 $('#edit_generic_form').on('submit', function (event) {
   event.preventDefault();
-  var generic= localStorage.getItem("generic_id")
-  // console.log("generic_id",generic)
 
+  category_id = sessionStorage.getItem('category_id');
+
+
+  url = `/store/category-home/category-list/${category_id}/`,
   $.ajax({
-      url: `/store/generic-home/generic-list/${generic}/`,
+      url: url,
       type: 'POST',
       data: {
        
           name: $('#generics_name_edit').val(),//.addClass('text-uppercase'),
           description: $('#generics_description_edit').val(),
-          generic:generic,
+          category_id:category_id,
           csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
 
       },
@@ -62,10 +64,10 @@ $('#edit_generic_form').on('submit', function (event) {
       success: function (data) {
         //   console.log(data);
         $("#myList").animate('swing').empty()
-                get_generics()
+        get_cetegories()
 
           if (data) {
-              swallAlerts('updated successfully', 'success', "bottom-end", 3000, false);
+              swallAlerts('updated successfully', 'success', "bottom-end", 1000, false);
           }
         
       },

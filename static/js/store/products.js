@@ -1,63 +1,3 @@
-const populateProductTable = (data) => {
-    $("#items_search").focus();
-    const category_name = sessionStorage.getItem('category_name');
-
-    $("#categories_title").text(category_name)
-    var table = "";
-
-    for (var i in data) {
-
-
-        var arr = $.each(data[i].supplier, function (key, value) {
-            // console.log(value)
-
-        })
-        table += "<tr>";
-
-        table += `<td>` + `${parseInt(i) + 1}` + `</td>`
-            + `<td >` + data[i].name + `</td>`
-            + `<td >` + data[i].price + `</td>`
-            + `<td >` + data[i].quantity + `</td>`
-            + `<td >` + data[i].description + `</td>`
-            + `<td >` + convertNullValues(data[i].unit_name) + `</td>`
-            + `<td >` + data[i].supplier + `</td>`
-            + `<td >` + data[i].stock_level + `</td>`
-            + `<td >` + data[i].original_stock + `</td>`
-            + `<td >` + convertNullValues(data[i].shelf_number) + `</td>`
-            + `<td >` + has_expire_date_(data[i].has_expire_date) + `</td>`
-            + `<td >` + convertNullValues(data[i].expire_date) + `</td>`
-            + `<td >` + data[i].months_to_expire + `</td>`
-            + `<td >` + has_expired(data[i].has_expired) + `</td>`
-            + `<td class="edit_product  btn btn-light btn-outline-info"  title="edit items" onclick="getProduct(${data[i].pk})"  data-edit-product="${data[i].pk}">` + `<i class="fa fa-edit  mx-4"  style="cursor:pointer"  aria-hidden="true"></i>` + `</td>`
-
-        + `<td class="">` + `<input type="text" class="add_to_cart" name="${data[i].pk}"  onKeydown="addToCart(${data[i].price})"  style="width:100%;">` + `</td>`
-
-        // + `<td class="view_products btn btn-light btn-outline-primary" title="a items" data-add="${data[i].get_absolute_url}" >` + `<i  class="fa fa-plus mx-4 " style="cursor:pointer"  aria-hidden="true"></i>` + `</td>`
-
-        // + `<td class="add_product  btn-sm  btn-outline-info" data-view="${data[i].get_absolute_url}">` + `<i class="fa fa-plus my-2 mx-4" title="add new item" style="color:red;cursor:pointer"  aria-hidden="true"></i>` + `</td>`
-
-
-        table += "</tr>";
-    }
-
-
-    document.getElementById("products_in_categories").innerHTML = table;
-
-    table = document.getElementById("products_table");
-    const table_size = $(".view_products").length
-    // console.log("table_size",table_size)
-
-
-    // view_products()
-    // add_product()
-    // edit_category()
-    loadUnit()
-    loadSupliers()
-    exitModelAdd()
- 
-
-}
-
 
 
 function has_expire_date_(status) {
@@ -94,7 +34,7 @@ const displayProductTable = (category_id) => {
         success: function (response) {
 
             populateProductTable(response)
-            // console.log(response)
+            console.log(response)
 
         },
         error: function (jqXHR, textStatus, errorThrown) {
@@ -107,15 +47,19 @@ const displayProductTable = (category_id) => {
 }
 
 
+// get a product and load it into product fields
 function getProduct(product_id) {
-    // $('#products_in_categories').delegate('.edit_product', 'click', function () {
     $("#editProductBtn").click();
-    // $(".inputUnit").empty()
-    // $(".inputSupplier").empty()
-    // var product_id = $(this).attr('data-edit-product');
 
-    console.log('product_id', product_id)
-    sessionStorage.setItem('product_id', product_id);
+    loadUnit()
+    loadSupliers()
+ 
+    localStorage.setItem('product_id', product_id);
+
+
+    const category_name = sessionStorage.getItem('category_name');
+    $(".product_title_edit").text(`EDIT ${category_name}`)
+
 
 
     $.ajax({
@@ -146,7 +90,6 @@ function getProduct(product_id) {
                 $("#inputMonthsToExpireEdit").val(data.months_to_expire),
 
                 $('#inputHasExpireDateEdit').prop('checked', data.has_expire_date)
-            // console.log('has_expire_date',data.has_expire_date)
             has_expire_date(data.has_expire_date)
 
 
@@ -189,7 +132,6 @@ const addToCart = (price) => {
                     price:price,
                     update_quantity:true,
                     csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
-    
                 },
     
                 success: function (data) {
@@ -198,13 +140,16 @@ const addToCart = (price) => {
                     // console.log('product_price =', product_price,'quantity = ',quantity,'id= ',id);
 
                     if (data) {
-                        swallAlerts('saved for posting', 'success', "bottom-end", 3000, false);
-                         console.log(data)
+                        swallAlerts('value saved for posting', 'success', "bottom-end", 1000, false);
+                        //  console.log(data)
                         $('#products_cart').DataTable().ajax.reload();
                     }
                     setTimeout(() => {
-                        // console.log(this)
-                        // console.log($($`.add_to_cart id{}`).val(''))
+                        
+                        cart_size()
+
+                        $('.add_to_cart').val('')
+                    
 
                         
                     }, 2000);

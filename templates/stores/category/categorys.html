@@ -10,6 +10,7 @@
 <link rel="stylesheet" href="{% static 'css/store/store.css' %}">
 <script src="{% static 'js/store/store.js' %}"></script>
 <script src="{% static 'js/store/products.js' %}"></script>
+<script src="{% static 'js/store/cart.js' %}"></script>
 
 <body class="sb-nav-fixed">
     <!-- nav start-->
@@ -37,12 +38,20 @@
                             <i class="fas fa-table me-1"></i>
                             Categories | Home
 
-                          
-                            <button class="btn" style="float: right;cursor: pointer;"  onclick="openProdcuts()">
-                                All Products
-                                <i class="fas fa-table me-1 " ></i>
-                               
+
+                            <button class="btn" style="float: right;cursor: pointer;" onclick="openCart()">
+                                View Cart 
+                                <i class="fa fa-cart-plus text-primary" aria-hidden="true"></i>
+                                <span class="cart_size" data-toggle="tooltip" data-placement="top" title="items"></span>
                             </button>
+
+                            <button class="btn" style="float: right;cursor: pointer;" onclick="openProdcuts()">
+                                All Products
+                                <i class="fas fa-table me-1 text-primary"></i>
+
+                            </button>
+
+
 
                         </div>
                         <div class="card-body">
@@ -60,182 +69,159 @@
 
                                             <a href="#" class="list-group-item list-group-item-action active bg-dark "
                                                 aria-current="true">
-                                                Generics : 
-                                                <button type="button" style="float: right;" class=" btn btn-primary btn-sm" data-toggle="modal" data-target="#modelGenericAdd">
-                                                   <i class="fa fa-plus" aria-hidden="true"></i> Add New 
-                                                  </button>
+                                                Categories :
+                                                <button type="button" style="float: right;"
+                                                    class=" btn btn-primary btn-sm" data-toggle="modal"
+                                                    data-target="#modelGenericAdd">
+                                                    <i class="fa fa-plus" aria-hidden="true"></i> Add New
+                                                </button>
                                             </a>
 
                                             <input class="" type="search" name="" id="myInput"
                                                 placeholder="quick search ..">
 
-                                                <form method="get" class="list_form">
-                                                    <ul class="list-group " id="myList">
-                                                        <!-- insert generics here from ajax jquary -->
-                                                        
-                                                    </ul> 
-                                                        
-                                                </form>
+                                            <form method="get" class="list_form">
+                                                <ul class="list-group " id="myList">
+                                                    <!-- insert generics here from ajax jquary -->
 
+                                                </ul>
+
+                                            </form>
+
+                                          
                                         </div>
                                     </div>
                                     <!-- category view strat -->
-                                  
-                                    <div class="col-md-8 col-sm-8 col-lg-8" id="categories_div">
-                                        <h4 class="text-center text-uppercase" id="categories_title"> <b class="">MATERIAL REQUISITION FORM </b> </h4>
 
-                                                
+                                    <div class="col-md-8 col-sm-8 col-lg-8" id="categories_div">
+                                        <h4 class="text-center text-uppercase product_title" id="product_title"> <b
+                                                class=""> </b> </h4>
+
+
 
 
 
                                         <!-- <h4 class="text-center text-muted">Add Request Items To Proceed</h4> -->
 
-                                        <div class="" style="float: right">
+                                        <div id="search_div" class="" style="float: right">
 
-                                            <a class="text-info" href="" id="cart_size"> </a>
+                                            <!-- <a class="text-info" href="" id="cart_size"> </a> -->
                                             <input type="search" name="" id="items_search" placeholder="Search ..">
-                                            <button  type="button" class="btn btn-primary btn-sm" data-toggle="modal"
-                                            data-target="#modelCategoryAdd" ><i class="fa fa-plus" aria-hidden="true"></i> New Item</button>
-            
-            
+                                            <button type="button" class="btn btn-primary btn-sm" data-toggle="modal"
+                                                data-target="#modelProductAdd"><i class="fa fa-plus"
+                                                    aria-hidden="true"></i> New Item</button>
+
+
                                         </div>
                                         <br>
-                                        
-                                        <form  id="products_from">
-                                    <div class="table-wrapper-scroll-y my-custom-scrollbar">
 
-                                                        
-                                            <table class="table table-bordered table-hover styled-table" id="categories_table">
-                                                {% csrf_token %}
-                                                <thead>
-                                                    <tr>
-                                                        <th>#</th>
-                                                        <th>Item Name</th>
-                                                        <th>Description</th>
-                                                        <!-- <th></th> -->
-                                                        <th>Action</th>
-                                                        <!-- <th>View</th> -->
-                                                        <!-- <th>Add</th> -->
-                                                        
-                                                    </tr>
-                                                </thead>
+                                        <form id="products_from">
+                                            <div class="table-wrapper-scroll-y my-custom-scrollbar">
 
 
+                                                <table class="table table-bordered table-hover styled-table"
+                                                    id="categories_table">
+                                                    {% csrf_token %}
+                                                    <thead>
+                                                        <tr>
+                                                            <!-- <th>#</th> -->
+                                                            <th>Name</th>
+                                                            <th>Price</th>
+                                                            <th>Quantity</th>
+                                                            <th>Description</th>
+                                                            <th>Unit</th>
+                                                            <th>Supplier(s)</th>
+                                                            <!-- <th>Stock Level</th> -->
+                                                            <!-- <th>Original Stock</th> -->
+                                                            <th>Shelf Number</th>
+                                                            <!-- <th>Has Expire Date</th> -->
+                                                            <th>Expire Date</th>
+                                                            <!-- <th>Months TO Expire</th> -->
+                                                            <!-- <th>Has Expired</th> -->
+                                                            <th>Edit</th>
+                                                            <th><i class="fa fa-cart-plus" aria-hidden="true"></i></th>
 
-                                                <tbody id="categories_in_generics">
-                                                   
+                                                        </tr>
+                                                    </thead>
 
-                                                </tbody>
-                                                
-                                                <tfoot class="">
-                                                    <tr>
-                                                        <th>#</th>
-                                                        <th>Item Name</th>
-                                                        <th>Description</th>
-                                                        <!-- <th>View</th> -->
-                                                    </tr>
-                                                </tfoot>
-                                                
-                                            </table>
-                                        </div>
+
+
+                                                    <tbody id="products_in_categories">
+
+
+                                                    </tbody>
+
+                                                    <tfoot class="">
+                                                        <tr>
+                                                            <!-- <th>#</th> -->
+                                                            <th>Name</th>
+                                                            <th>Price</th>
+                                                            <th>Quantity</th>
+                                                            <th>Description</th>
+                                                            <th>Unit</th>
+                                                            <th>Supplier(s)</th>
+                                                            <!-- <th>Stock Level</th> -->
+                                                            <!-- <th>Original Stock</th> -->
+                                                            <th>Shelf Number</th>
+                                                            <!-- <th>Has Expire Date</th> -->
+                                                            <th>Expire Date</th>
+                                                            <!-- <th>Months TO Expire</th> -->
+                                                            <!-- <th>Has Expired</th> -->
+                                                            <th>Edit</th>
+                                                            <th><i class="fa fa-cart-plus" aria-hidden="true"></i></th>
+
+                                                        </tr>
+                                                    </tfoot>
+
+                                                </table>
+                                            </div>
                                         </form>
 
-                                        
+
                                     </div>
                                     <!-- category view end -->
 
 
-                                    <!-- products table view start -->
+                                    <!-- cart view start-->
+                                    <form id="cart_form">
+                                    <div id="cart_div" class="table-wrapper-scroll-y my-custom-scrollbar">
+                                        
 
-                                    <div class="col-md-8 col-sm-8 col-lg-8" id="products_div">
-                                       
-
-
-
-
-
-                                        <div class="" style="float: right">
-                                            <a class="text-info" href="" id="cart_size"> </a>
-                                            <input type="search"  name="" id="product_search" placeholder="Search ..">
-                                            <button  type="button" id="productAddBtn" class="btn btn-primary btn-sm " data-toggle="modal"
-                                            data-target="#modelProductAdd" ><i class="fa fa-plus" aria-hidden="true"></i> New Product</button>
-            
-            
-                                        </div>
-                                            <br>
-                                        <form  id="categories_from">
-                                           
-                                            <!-- <button class="my-3 btn btn-block pulse text-info " id="goback" type="button">
-                                                <i class="fa fa-arrow-left" aria-hidden="true"></i> 
-                                                GO BACK</button> -->
-                                                <h5 class="text-center text-uppercase" id="products_title"> <b class=""></b> </h5>
-                                                <!-- <h6 class="text-center text-uppercase" id="products_name"> <b class=""> </b> </h6> -->
-                                                
-        
-                                                <!-- <h6 class="text-center text-uppercase" id="products_name"> <b class=""> </b> </h6> -->
-                                            <table class="table table-bordered table-hover styled-table" id="products_table">
-                                                {% csrf_token %}
+                                            <table class="table styled-table" id="cart_table">
                                                 <thead>
                                                     <tr>
                                                         <th>#</th>
                                                         <th>Name</th>
-                                                        <th>Price</th>
-                                                        <th>Quantity</th>
-                                                        <th>Description</th>
-                                                        <th>Unit</th>
-                                                        <th>Supplier(s)</th>
-                                                        <th>Stock Level</th>
-                                                        <th>Original Stock</th>
-                                                        <th>Shelf Number</th>
-                                                        <th>Has Expire Date</th>
-                                                        <th>Expire Date</th>
-                                                        <th>Months TO Expire</th>
-                                                        <th>Has Expired</th>
-                                                        <th>Edit</th>
-                                                        <th><i class="fa fa-cart-plus" aria-hidden="true"></i></th>
-
-                                                        
+                                                        <th>Old Quantity</th>
+                                                        <th>New Quantity</th>
+                                                        <th>Variance</th>
                                                     </tr>
                                                 </thead>
-
-
-
-                                                <tbody id="products_in_categories">
-                                                   
+                                                <tbody id="cart_body">
 
                                                 </tbody>
-                                                <tfoot>
+                                                <tfoot class="">
                                                     <tr>
                                                         <th>#</th>
                                                         <th>Name</th>
-                                                        <th>Price</th>
-                                                        <th>Quantity</th>
-                                                        <th>Description</th>
-                                                        <th>Unit</th>
-                                                        <th>Supplier(s)</th>
-                                                        <th>Stock Level</th>
-                                                        <th>Original Stock</th>
-                                                        <th>Shelf Number</th>
-                                                        <th>Has Expire Date</th>
-                                                        <th>Expire Date</th>
-                                                        <th>Months TO Expire</th>
-                                                        <th>Has Expired</th>
-                                                        <th>Edit</th>
-                                                        <th><i class="fa fa-cart-plus" aria-hidden="true"></i></th>
+                                                        <th>Old Quantity</th>
+                                                        <th>New Quantity</th>
+                                                        <th>Variance</th>
                                                     </tr>
-                                                   
                                                 </tfoot>
                                             </table>
-                                        </form>
+                                            <button id="cart_post_btn" type="submit" class="btn btn-primary">Post Data</button>
 
-                                   
                                     </div>
-                                    <!-- products table  view end -->
+
+                                </form>
+                                    <!-- cart view end -->
+
                                 </div>
                             </div>
-                           
 
-                           
+
+
 
 
                         </div>
@@ -251,32 +237,23 @@
 
 
 
-<!-- add and edit generics start -->
+    <!-- add and edit generics start -->
 
-{% include 'stores/category/partials/generics/add.html' %}
-{% include 'stores/category/partials/generics/edit.html' %}
-<!-- add and edit generics end -->
-
-
-<!-- add and edit category start-->
-
-{% include 'stores/category/partials/categories/add.html' %}
-{% include 'stores/category/partials/categories/edit.html' %}
-<!-- add and edit category end -->
+    {% include 'stores/category/partials/generics/add.html' %}
+    {% include 'stores/category/partials/generics/edit.html' %}
+    <!-- add and edit generics end -->
 
 
-<!-- add and edit products start-->
+   
 
-{% include 'stores/category/partials/products/add.html' %}
-{% include 'stores/category/partials/products/edit.html' %}
-<!-- add and edit products end -->
+    <!-- add and edit products start-->
+
+    {% include 'stores/category/partials/products/add.html' %}
+    {% include 'stores/category/partials/products/edit.html' %}
+    <!-- add and edit products end -->
 
 
 
-<!-- Start of  Items in Cart Table -->
-<!-- {% include 'stores/category/partials/products/cart.html' %} -->
-<!-- End of Items in Cart Table --> 
+
 
     {% endblock content %}
-
-
