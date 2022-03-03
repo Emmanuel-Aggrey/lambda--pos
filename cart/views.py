@@ -22,14 +22,10 @@ def cart_add(request):
     quantity = int(data['quantity'])
     update_quantity = eval(data.get('update_quantity', 'False').title())
 
-    print(type(update_quantity),update_quantity)
     cart.add(product=product, price=price,
              quantity=quantity, update_quantity=update_quantity)
 
-    # res = requests.get('http://127.0.0.1:8000/cart/')
-
-    # print(res.status_code)
-
+   
     data = {
         "product": product,
         "price": f'{price:.2f}',
@@ -40,7 +36,7 @@ def cart_add(request):
     return Response(data, status=status.HTTP_201_CREATED)
 
 
-@api_view(['DELETE'])
+@api_view(['DELETE','POST','GET'])
 def cart_remove(request, product_id):
     '''
     REMOVE ITEM FROM CART
@@ -49,6 +45,7 @@ def cart_remove(request, product_id):
     product_id = str(product_id)
 
     products = list(cart.cart.keys())
+    print(products)
 
     if product_id in products:
         cart.remove(product_id)

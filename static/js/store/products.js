@@ -108,63 +108,7 @@ function getProduct(product_id) {
 }
 
 
-// add to cart
-// space = 32, enter= 13
 
-
-
-const addToCart = (price) => {
-    // $('.add_to_cart').keypress(function( event ) {
-
-        
-        if ( event.which == 13 || event.which ==32) {
-            event.preventDefault();
-             product_price = price
-             quantity =  event.target.value
-             id = event.target.name
-            // AJAX CALL START
-            $.ajax({
-                url: '/cart/add/',
-                type: 'POST',
-                data: {
-                    id:id,
-                    quantity:quantity,
-                    price:price,
-                    update_quantity:true,
-                    csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
-                },
-    
-                success: function (data) {
-                   
-
-                    // console.log('product_price =', product_price,'quantity = ',quantity,'id= ',id);
-
-                    if (data) {
-                        swallAlerts('value saved for posting', 'success', "bottom-end", 1000, false);
-                        //  console.log(data)
-                        $('#products_cart').DataTable().ajax.reload();
-                    }
-                    setTimeout(() => {
-                        
-                        cart_size()
-
-                        $('.add_to_cart').val('')
-                    
-
-                        
-                    }, 2000);
-    
-                }
-    
-            });
-    
-
-
-            // AJAX CALL END
-        }
-      
-    //   });
-}
 
 
 
@@ -230,31 +174,6 @@ const loadSupliers = () => {
 }
 
 
-
-// closs product table on escape key press
-
-
-
-const exitModelAdd = () => {
-    $(document).keydown(function (event) {
-        // const isOpen = $("#products_div").dialog("isOpen");
-        const isShown = $("#modelProductAdd").hasClass("show");
-        // console.log(isOpen,isShown)
-
-        if (event.keyCode === 27 & isOpen & isShown) {
-
-            console.log(isOpen, isShown)
-
-        }
-        else if (event.keyCode === 27 & isOpen) {
-            console.log(isOpen, isShown)
-            // $("#products_div").dialog("close");
-
-        }
-
-    })
-}
-
 // check if product has a expire  date
 
 function has_expire_date(status) {
@@ -299,8 +218,6 @@ function has_expire_date(status) {
 
 // live search on table
 $(document).ready(function () {
-
-
 
     $("#product_search").on("keyup", function () {
         var value = $(this).val().toLowerCase();

@@ -1,4 +1,4 @@
-// populate list with cetegories
+// populate list with cetegories response
 
 const get_cetegories = () => {
 
@@ -15,6 +15,7 @@ const get_cetegories = () => {
 
             </li>
             `)
+
 
         });
 
@@ -33,17 +34,13 @@ $(function () {
 
 $(function () {
 
-
-
     // $("#myList ,li").click(function (e) {
     $('#myList').delegate('.list-group-item', 'click', function (e) {
 
-
-        // $( "#products_div" ).dialog({ autoOpen: true });
-
-
         e.preventDefault();
         $("#search_div").fadeIn();
+        $( "#cart_div" ).dialog( "close" )
+
 
 
         var category_id = $(e.target).attr('id');
@@ -63,7 +60,6 @@ $(function () {
                 type: 'GET',
 
                 success: function (response) {
-                    console.log(response)
                     populateProductTable(response)
 
                 },
@@ -86,12 +82,9 @@ const populateProductTable = (data) => {
     var table = "";
 
     for (var i in data) {
-        // console.log(data)
 
-        // console.log("data >",parseInt(i)+1)
 
         table += "<tr>";
-
 
         table += ``
             + `<td >` + data[i].name + `</td>`
@@ -109,7 +102,7 @@ const populateProductTable = (data) => {
             // + `<td >` + has_expired(data[i].has_expired) + `</td>`
             + `<td class="edit_product  btn btn-light btn-outline-info"  title="edit items" onclick="getProduct(${data[i].pk})"  data-edit-product="${data[i].pk}">` + `<i class="fa fa-edit  mx-4"  style="cursor:pointer"  aria-hidden="true"></i>` + `</td>`
 
-            + `<td class="">` + `<input type="text" placeholder='quantity' class="add_to_cart" name="${data[i].pk}"  onKeydown="addToCart(${data[i].price})"  style="width:100%;">` + `</td>`
+            + `<td class="" placeholder="press enter or space to save">` + `<input type="text" placeholder='quantity' class="add_to_cart" name="${data[i].pk}"  onKeydown="addToCart(${data[i].price})"  style="width:100%;">` + `</td>`
 
 
 
@@ -160,22 +153,9 @@ function view_products_table(event) {
         const category_name = sessionStorage.getItem('category_name');
         var product_name = $(this).attr('data-product-name');
         products = category_name + ' > ' + product_name
-        // $( "#products_div" ).dialog( "open" ).dialog({
-
-        //     title: (products),
-        //     height:800,
-        //     width:1450,
-        //     minHeight: 900,
-        //     minWidth: 1300,
-
-        // })//.effect('shake','fast');
-
-
-
-        // $("#products_div").fadeIn()
+       
         var products_url = $(this).attr('data-view');
 
-        // console.log(products_url)
         localStorage.setItem('category_url', products_url);
 
         $.ajax({
@@ -213,20 +193,6 @@ function add_category() {
 
 }
 
-function view_category() {
-    order_number = '{{request_.order_number}}'
-    // console.log("order_number",order_number)
-    $.ajax({
-        type: 'GET',
-        url: `/get_requisition_size/${order_number}/`,
-        success: function (response) {
-            $('#cart_size').text(response.cartlen_in + ' Items View ')
-            // console.log("cart sixe ", response.cart_len)
-
-        }
-    })
-
-}
 
 // get data into category table after ajax call on add or edit
 
@@ -282,14 +248,9 @@ function openProdcuts() {
 }
 
 
-// check if cart table is empty
-const isOpen = $("#cart_div").dialog("isOpen");
 
 
-if (isOpen) {
-    const isEmpty = document.querySelectorAll('#cart_table tr').length < 1;
-    console.log("isEmpty",isEmpty,'isOpen',isOpen)
-    // document.getElementById("cart_post_btn").disabled = false
-}
+
+
 
 

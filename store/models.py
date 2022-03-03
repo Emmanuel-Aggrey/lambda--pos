@@ -7,7 +7,7 @@ from django.shortcuts import reverse
 from django.utils import timezone
 from datetime import timedelta
 from dateutil import relativedelta
-from taggit.managers import TaggableManager
+# from taggit.managers import TaggableManager
 
 
 # Create your models here.

@@ -50,7 +50,7 @@ INSTALLED_APPS = [
     # 3rd partyW
     # 'corsheaders',
     'rest_framework',
-    'taggit',
+    
     # 'rest_framework.authtoken',
     # 'djoser',
     'session_security',
