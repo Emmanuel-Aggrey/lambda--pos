@@ -30,6 +30,7 @@ const openCart = () => {
 }//end of function
 
 // add item(s) to cart
+//please check the receivingparameters
 const addToCart = (price) => {
 
 
@@ -59,10 +60,12 @@ const addToCart = (price) => {
 
                 view_cart()
                 cart_size()
+                
 
                 setTimeout(() => {
 
                     $('.add_to_cart').val('')
+                    
 
                 }, 1000);
 
@@ -75,6 +78,8 @@ const addToCart = (price) => {
 
     //   });
 }
+
+
 
 // list items in cart
 function view_cart() {
@@ -93,8 +98,12 @@ function view_cart() {
                     + `<td >` + count + `</td>`
                     + `<td >` + response[i].name + `</td>`
                     + `<td >` + response[i].quantity + `</td>`
-                    + `<td >` + response[i].quantity_in_cart + `</td>`
-                    + `<td >` + response[i].variance + `</td>`
+                    // + `<td >` + response[i].quantity_in_cart + `</td>`
+                    
+
+                    + `<td class="" placeholder="press enter or space to save">` + `<input type="number" onKeyUp="addToCart(${response[i].price})"   name="${response[i].pk}"  value="${response[i].quantity_in_cart}">` + `</td>`
+
+                    + `<td >` + response[i].total + `</td>`
                     + `<td class="trash_cart"  title="trash item" onclick="removeItemFromCart(${response[i].pk})">` + `<i class="fa fa-trash  mx-4"   aria-hidden="true"></i>` + `</td>`
 
                 table += "</tr>";
@@ -103,6 +112,8 @@ function view_cart() {
             document.getElementById("cart_body").innerHTML = table;
 
             table = document.getElementById("cart_table");
+
+        
         }
     })
 
@@ -134,7 +145,7 @@ const cart_close_btn = () => {
 }
 
 // live search on cart table
-// live search on table
+// live search on cart
 
 $(document).ready(function () {
     $("#cart_items_search").on("keyup", function () {

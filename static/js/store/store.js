@@ -97,12 +97,12 @@ const populateProductTable = (data) => {
             // + `<td >` + data[i].original_stock + `</td>`
             + `<td >` + convertNullValues(data[i].shelf_number) + `</td>`
             // + `<td >` + has_expire_date_(data[i].has_expire_date) + `</td>`
-            + `<td >` + convertNullValues(data[i].expire_date) + `</td>`
+            // + `<td >` + convertNullValues(data[i].expire_date) + `</td>`
             // + `<td >` + data[i].months_to_expire + `</td>`
             // + `<td >` + has_expired(data[i].has_expired) + `</td>`
             + `<td class="edit_product  btn btn-light btn-outline-info"  title="edit items" onclick="getProduct(${data[i].pk})"  data-edit-product="${data[i].pk}">` + `<i class="fa fa-edit  mx-4"  style="cursor:pointer"  aria-hidden="true"></i>` + `</td>`
 
-            + `<td class="" placeholder="press enter or space to save">` + `<input type="text" placeholder='quantity' class="add_to_cart" name="${data[i].pk}"  onKeydown="addToCart(${data[i].price})"  style="width:100%;">` + `</td>`
+            + `<td class="" placeholder="press enter or space to save">` + `<input type="number" placeholder='quantity' class="add_to_cart" name="${data[i].pk}"  onKeyUp="addToCart(${data[i].price})"  style="width:100%;">` + `</td>`
 
 
 

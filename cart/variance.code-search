@@ -1,0 +1,23 @@
+# Query: variance
+# ContextLines: 1
+
+4 results - 3 files
+
+cart/views.py:
+  75                  'quantity': product['quantity'],
+  76:                 'total': product['quantity'] + value['quantity'],
+  77                  'has_expire_date': product['has_expire_date'],
+
+static/js/store/cart.js:
+  96                      + `<td >` + response[i].quantity_in_cart + `</td>`
+  97:                     + `<td >` + response[i].total + `</td>`
+  98                      + `<td class="trash_cart"  title="trash item" onclick="removeItemFromCart(${response[i].pk})">` + `<i class="fa fa-trash  mx-4"   aria-hidden="true"></i>` + `</td>`
+
+templates/stores/category/categorys.html:
+  205                                                          <th>New Quantity</th>
+  206:                                                         <th>total</th>
+  207                                                          <th>Remove</th>
+
+  218                                                          <th>New Quantity</th>
+  219:                                                         <th>total</th>
+  220                                                          <th>Remove</th>

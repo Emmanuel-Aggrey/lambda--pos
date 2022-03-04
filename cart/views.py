@@ -73,7 +73,7 @@ def cart_detail(request):
                 'name': product['name'],
                 'price': product['price'],
                 'quantity': product['quantity'],
-                'variance': product['quantity'] - value['quantity'],
+                'total': product['quantity'] + value['quantity'],
                 'has_expire_date': product['has_expire_date'],
                 'expire_date': product['expire_date'],
                 'months_to_expire': product['months_to_expire'],

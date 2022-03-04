@@ -97,7 +97,7 @@ class Category(BaseModel):
 class Product(BaseModel):
     name = models.CharField(max_length=100, db_index=True)
     price = models.DecimalField(max_digits=20, decimal_places=2, null=True)
-    quantity = models.PositiveIntegerField()
+    quantity = models.PositiveIntegerField(blank=True,default=0)
     description = models.TextField(blank=True, null=True)
     category = models.ForeignKey(
         Category, on_delete=models.CASCADE, related_name='categories', blank=True, null=True)

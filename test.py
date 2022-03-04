@@ -1,4 +1,5 @@
 import requests
+from bs4 import BeautifulSoup
 
 cookies = {
     'csrftoken': 'Zxq3FStFYro1AeWRLggNYvcB2ENFMcA00UKMGRcyBkicYTnGIvAjRIIROhEepBmm',
@@ -22,6 +23,21 @@ headers = {
     'Accept-Language': 'en-US,en;q=0.9,la;q=0.8',
 }
 
-response = requests.get('http://127.0.0.1:8000/business/supliers/', headers=headers, cookies=cookies)
+url = "http://127.0.0.1:8000/business/supliers/"
 
-print("response",response)
+response = requests.get(url, headers=headers, cookies=cookies)
+
+
+
+print(response.content)
+
+soup = BeautifulSoup(response.content, "html.parser")
+
+
+# results = soup.find(id="employees_table")
+
+results = soup.find_all("div", class_="card-body")
+
+
+print(results)
+
