@@ -41,13 +41,13 @@
 
                             <button class="btn" style="float: right;cursor: pointer;" onclick="openCart()" data-toggle="tooltip" data-placement="top" title="data ready for posting">
                                 
-                                <i class="fa fa-cart-plus text-primary" aria-hidden="true"></i>
+                                <i class="fa fa-cart-plus text-white" aria-hidden="true"></i>
                                 <span class="cart_size"></span>
                             </button>
 
                             <button class="btn" style="float: right;cursor: pointer;" onclick="openProdcuts()">
                                 All Products
-                                <i class="fas fa-table me-1 text-primary"></i>
+                                <i class="fas fa-table me-1 text-white"></i>
 
                             </button>
 
@@ -58,7 +58,7 @@
 
 
 
-                            <div class="container-fluid " style="background-color:whitesmoke">
+                            <div class="container-fluid " style="background-color:white">
 
                                 <div class="row">
                                     <!-- <p>click on generics to display data</p> -->
@@ -67,11 +67,11 @@
 
                                         <div class="list-group">
 
-                                            <a href="#" class="list-group-item list-group-item-action active bg-dark "
-                                                aria-current="true">
+                                            <a href="#" class="list-group-item list-group-item-action active"
+                                                aria-current="true" style="background-color:#2C687A"> 
                                                 Categories :
-                                                <button type="button" style="float: right;"
-                                                    class=" btn btn-primary btn-sm" data-toggle="modal"
+                                                <button type="button" style="float: right;color:white"
+                                                    class=" btn  btn-sm" data-toggle="modal"
                                                     data-target="#modelGenericAdd">
                                                     <i class="fa fa-plus" aria-hidden="true"></i> Add New
                                                 </button>
@@ -93,7 +93,7 @@
                                     </div>
                                     <!-- category view strat -->
 
-                                    <div class="col-md-8 col-sm-8 col-lg-8" id="categories_div">
+                                    <div class="col-md-8 col-sm-8 col-lg-8" style="color: #2C687A" id="categories_div">
                                         <h4 class="text-center text-uppercase product_title" id="product_title"> <b
                                                 class=""> </b> </h4>
 
@@ -107,8 +107,8 @@
 
                                             <!-- <a class="text-info" href="" id="cart_size"> </a> -->
                                             <input type="search" name="" id="items_search" placeholder="Search ..">
-                                            <button type="button" class="btn btn-primary btn-sm" data-toggle="modal"
-                                                data-target="#modelProductAdd"><i class="fa fa-plus"
+                                            <button type="button" class="btn  btn-sm" data-toggle="modal" style="color:white;background-color:#156A78"
+                                                data-target="#modelProductAdd"><i class="fa fa-plus text-white"
                                                     aria-hidden="true"></i> New Item</button>
 
 
@@ -139,7 +139,7 @@
                                                             <!-- <th>Months TO Expire</th> -->
                                                             <!-- <th>Has Expired</th> -->
                                                             <th>Edit</th>
-                                                            <th><i class="fa fa-cart-plus" aria-hidden="true"></i></th>
+                                                            <th class="text-white"><i class="fa fa-cart-plus text-white" aria-hidden="true"></i></th>
 
                                                         </tr>
                                                     </thead>
@@ -228,7 +228,7 @@
                                             </table>
                                            
                                             <div class="text-center" style="position:sticky">
-                                                <button id="cart_post_btn" type="submit" class="btn btn-primary btn-block">Post Data</button>
+                                                <button id="cart_post_btn" type="submit" class="btn btn-primary btn-block" onclick="post_cart('cart0')">Post Data</button>
                                                 <button id="cart_close_btn" type="submit" class="btn btn-primary btn-block" onclick="cart_close_btn()">Close Window</button>
                                             </div>
 
@@ -279,7 +279,11 @@
      .trash_cart:hover{
        color:crimson;
        cursor:pointer;
+      
     }
+
+    
+    
 </style>
 
     {% endblock content %}

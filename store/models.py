@@ -54,6 +54,7 @@ class Unit(BaseModel):
 # auditlog.register(Unit)
 
 
+
 class Category(BaseModel):
     name = models.CharField(
         help_text='eg syrup,tablet,cream,shandy,guinness can 5 LT', max_length=100)

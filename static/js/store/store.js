@@ -9,9 +9,9 @@ const get_cetegories = () => {
         var arr = $.each(data, function (key, value) {
 
             return $("#myList").append(`
-            <li class='list-unstyled list-group-item my-1 mx-4'  tittle='${value.description}' id=${value.pk} data-name='${value.name}'> ${value.name} 
+            <li class='list-unstyled list-group-item my-1 mx-4 '  tittle='${value.description}' id=${value.pk} data-name='${value.name}' style='${setDynamicColor()};color:white;'> ${value.name} 
             
-             <i data-category='${value.pk}' class="fa fa-edit edit_category text-dark fx-3 " title="edit" aria-hidden="true" style="float: right;cursor:copy;"></i>
+             <i data-category='${value.pk}' class="fa fa-edit edit_category text-white fx-3 " title="edit" aria-hidden="true" style="float: right;cursor:copy;"></i>
 
             </li>
             `)
@@ -89,7 +89,7 @@ const populateProductTable = (data) => {
         table += ``
             + `<td >` + data[i].name + `</td>`
             + `<td >` + data[i].price + `</td>`
-            + `<td >` + data[i].quantity + `</td>`
+            + `<td  style="${check_stock_level(data[i].stock_level,data[i].quantity)}">` + data[i].quantity + `</td>`
             + `<td >` + data[i].description + `</td>`
             + `<td >` + convertNullValues(data[i].unit_name) + `</td>`
             + `<td >` + data[i].supplier + `</td>`
@@ -100,9 +100,9 @@ const populateProductTable = (data) => {
             // + `<td >` + convertNullValues(data[i].expire_date) + `</td>`
             // + `<td >` + data[i].months_to_expire + `</td>`
             // + `<td >` + has_expired(data[i].has_expired) + `</td>`
-            + `<td class="edit_product  btn btn-light btn-outline-info"  title="edit items" onclick="getProduct(${data[i].pk})"  data-edit-product="${data[i].pk}">` + `<i class="fa fa-edit  mx-4"  style="cursor:pointer"  aria-hidden="true"></i>` + `</td>`
+            + `<td class="edit_product  btn btn-light btn-outline-info"  title="edit items" onclick="getProduct(${data[i].pk})"  data-edit-product="${data[i].pk}">` + `<i class="fa fa-edit  mx-4"  style="cursor:pointer;"  aria-hidden="true"></i>` + `</td>`
 
-            + `<td class="" placeholder="press enter or space to save">` + `<input type="number" placeholder='quantity' class="add_to_cart" name="${data[i].pk}"  onKeyUp="addToCart(${data[i].price})"  style="width:100%;">` + `</td>`
+            + `<td class="" placeholder="press enter or space to save">` + `<input type="number" placeholder='quantity' data-cart_name="re_order" getProduct(${data[i].pk})" class="add_to_cart" name="${data[i].price}"  onKeyUp="addToCart(${data[i].pk},'cart')"  style="width:100%;">` + `</td>`
 
 
 
@@ -249,8 +249,19 @@ function openProdcuts() {
 
 
 
+// check for re_order of items to stock
+function check_stock_level(stock_level,quantity) {
+    if (stock_level < quantity) {
+        return  "background-color: red;"
+    }
+   
+}
 
+// dynamic colors on list items
+function setDynamicColor() {
+var colors = ["#EB7C36","#2C687A","#4A4E53","#E13234"];
+    
 
-
-
+	return  `background-color:${colors[Math.floor(Math.random() * colors.length)]}`
+}
 

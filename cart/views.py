@@ -10,20 +10,27 @@ from cart.cart import Cart
 
 
 @api_view(['POST'])
-def cart_add(request):
+def cart_add(request,cart_session_name='cart'):
     '''
     ADD ITEM TO CART
     '''
-    cart = Cart(request)
+    cart = Cart(request,cart_session_name)
+    
     data = request.data
+    # cart_session_name = data.get('cart_session_name','cart') #get the cart session name
     product = data.get('id')
     price = '{:.2f}'.format(float(data['price']))
     price = eval(price)
     quantity = int(data['quantity'])
     update_quantity = eval(data.get('update_quantity', 'False').title())
 
+
+    
+
     cart.add(product=product, price=price,
              quantity=quantity, update_quantity=update_quantity)
+
+    # print("cart_session_name",cart_session_name)
 
    
     data = {
@@ -31,21 +38,22 @@ def cart_add(request):
         "price": f'{price:.2f}',
         "quantity": quantity,
         "update_quantity": update_quantity,
+        "cart_session_name": cart_session_name,
     }
 
     return Response(data, status=status.HTTP_201_CREATED)
 
 
 @api_view(['DELETE','POST','GET'])
-def cart_remove(request, product_id):
+def cart_remove(request, product_id,cart_session_name='cart'):
     '''
     REMOVE ITEM FROM CART
     '''
-    cart = Cart(request)
+    cart = Cart(request,cart_session_name)
     product_id = str(product_id)
 
     products = list(cart.cart.keys())
-    print(products)
+    # print(products)
 
     if product_id in products:
         cart.remove(product_id)
@@ -55,11 +63,13 @@ def cart_remove(request, product_id):
 
 
 @api_view(['GET'])
-def cart_detail(request):
+def cart_detail(request,cart_session_name='cart'):
     '''
     GET ALL ITEMS IN CART
     '''
-    cart = Cart(request)
+    cart = Cart(request,cart_session_name)
+
+   
 
     items = []
     for key, value in cart.cart.items():
@@ -80,6 +90,7 @@ def cart_detail(request):
                 
                 'quantity_in_cart': value['quantity'],
                 "total_price": value['total_price'],
+                'cart_session_name':cart.value,
             }
             items.append(data)
 
@@ -91,11 +102,11 @@ def cart_detail(request):
 
 
 @api_view(['DELETE'])
-def cart_destroy(request):
+def cart_destroy(request,cart_session_name='cart'):
     '''
         DESTROY ALL ITEMS  IN CART
     '''
-    cart = Cart(request)
+    cart = Cart(request,cart_session_name)
     # cart = cart.cart
     cart.clear()
 
@@ -103,16 +114,16 @@ def cart_destroy(request):
 
 
 @api_view(['GET'])
-def cart_length(request):
+def cart_length(request,cart_session_name='cart'):
     '''
     GET CART TOTAL AND PRICE TOTAL FOR ITEMS 
     '''
-    cart = Cart(request)
+    cart = Cart(request,cart_session_name)
     total_cart = len(cart)
     total_price = cart.get_total_price()
 
     cart = cart.cart
-    print(cart)
+    # print(cart)
 
     data = {
         'total_cart': total_cart,
@@ -121,3 +132,16 @@ def cart_length(request):
     # print(len(cart), cart.get_total_price())
 
     return Response(data=data, status=status.HTTP_200_OK)
+
+
+@api_view(['POST'])
+def post_cart(request,cart_session_name='cart'):
+    cart = Cart(request,cart_session_name)
+
+    for key, value in cart.cart.items():
+        print(key, value)
+
+
+    return Response(data='data posted successfully', status=status.HTTP_200_OK)
+
+

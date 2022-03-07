@@ -1,20 +1,31 @@
+.list-group-item {
+    height: 50px;
+    font-weight: 100%;
+    font-size: larger;
+}
 
-    .list-group-item:hover{
-        font-weight:bolder;
-        cursor: pointer;
-        background-color:whitesmoke;
-    }
 
-    .list-group-item:active{
-        background-color: rgb(181, 194, 194);
-    }
+.list-group-item:hover {
+    font-weight: bolder;
+    cursor: pointer;
+    background-color: whitesmoke;
 
-   
+}
 
-  
-#myList{
-    height:500px; width:100%;
-    overflow:hidden; overflow-y:scroll;
+
+
+.list-group-item:active {
+    background-color: rgb(181, 194, 194);
+}
+
+
+
+
+#myList {
+    height: 500px;
+    width: 100%;
+    overflow: hidden;
+    overflow-y: scroll;
     font-style: oblique;
     font-weight: bold;
 
@@ -28,11 +39,8 @@
     height: 500px;
     overflow: auto;
     width: 1050px;
-    }
-    .table-wrapper-scroll-y {
+}
+
+.table-wrapper-scroll-y {
     display: block;
-    }
-
-
-
-   
+}

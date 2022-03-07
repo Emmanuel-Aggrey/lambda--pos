@@ -37,8 +37,9 @@ class Cart(object):
         
 
         for k,v in cart.items():
+            pass
             
-            print('keys', k,'values', v)
+            # print('keys', k,'values', v)
 
 
 
@@ -48,7 +49,7 @@ class Cart(object):
         if product in self.cart:
             del self.cart[product]
             self.save()
-            print("cart",self.cart)
+            # print("cart",self.cart)
 
     def __iter__(self):
         product_ids = self.cart.keys()
@@ -67,7 +68,7 @@ class Cart(object):
     def get_total_price(self):
         total_price = sum(Decimal(item['price']) * int(item['quantity']) for item in self.cart.values())
         total_price = '{:.2f}'.format(total_price)
-        print(total_price)
+        # print(total_price)
         return total_price
 
     def clear(self):

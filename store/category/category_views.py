@@ -10,8 +10,10 @@ from store.models import Category
 from store.serializers import CategorySerializer
 from rest_framework import viewsets
 from rest_framework.parsers import JSONParser
+from django.contrib.auth.decorators import login_required
 
 
+@login_required
 @api_view(['GET','POST'])
 def category_views(request):
     """
