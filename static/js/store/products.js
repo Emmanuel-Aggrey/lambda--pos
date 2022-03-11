@@ -34,7 +34,7 @@ const displayProductTable = (category_id) => {
         success: function (response) {
 
             populateProductTable(response)
-            console.log(response)
+            // console.log(response)
 
         },
         error: function (jqXHR, textStatus, errorThrown) {

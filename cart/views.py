@@ -3,19 +3,20 @@ from django.views.decorators.http import require_POST
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from store.models import Product
+from store.models import Product, Item
 import requests
-from django.http import JsonResponse 
+from django.http import JsonResponse
 from cart.cart import Cart
+from django.db.models import F
 
 
 @api_view(['POST'])
-def cart_add(request,cart_session_name='cart'):
+def cart_add(request, cart_session_name='cart'):
     '''
     ADD ITEM TO CART
     '''
-    cart = Cart(request,cart_session_name)
-    
+    cart = Cart(request, cart_session_name)
+
     data = request.data
     # cart_session_name = data.get('cart_session_name','cart') #get the cart session name
     product = data.get('id')
@@ -24,15 +25,11 @@ def cart_add(request,cart_session_name='cart'):
     quantity = int(data['quantity'])
     update_quantity = eval(data.get('update_quantity', 'False').title())
 
-
-    
-
     cart.add(product=product, price=price,
              quantity=quantity, update_quantity=update_quantity)
 
     # print("cart_session_name",cart_session_name)
 
-   
     data = {
         "product": product,
         "price": f'{price:.2f}',
@@ -44,12 +41,12 @@ def cart_add(request,cart_session_name='cart'):
     return Response(data, status=status.HTTP_201_CREATED)
 
 
-@api_view(['DELETE','POST','GET'])
-def cart_remove(request, product_id,cart_session_name='cart'):
+@api_view(['DELETE', 'POST', 'GET'])
+def cart_remove(request, product_id, cart_session_name='cart'):
     '''
     REMOVE ITEM FROM CART
     '''
-    cart = Cart(request,cart_session_name)
+    cart = Cart(request, cart_session_name)
     product_id = str(product_id)
 
     products = list(cart.cart.keys())
@@ -63,13 +60,11 @@ def cart_remove(request, product_id,cart_session_name='cart'):
 
 
 @api_view(['GET'])
-def cart_detail(request,cart_session_name='cart'):
+def cart_detail(request, cart_session_name='cart'):
     '''
     GET ALL ITEMS IN CART
     '''
-    cart = Cart(request,cart_session_name)
-
-   
+    cart = Cart(request, cart_session_name)
 
     items = []
     for key, value in cart.cart.items():
@@ -81,32 +76,30 @@ def cart_detail(request,cart_session_name='cart'):
             data = {
                 'pk': product['id'],
                 'name': product['name'],
+                'category__name': product['category__name'],
                 'price': product['price'],
                 'quantity': product['quantity'],
                 'total': product['quantity'] + value['quantity'],
                 'has_expire_date': product['has_expire_date'],
                 'expire_date': product['expire_date'],
                 'months_to_expire': product['months_to_expire'],
-                
+
                 'quantity_in_cart': value['quantity'],
                 "total_price": value['total_price'],
-                'cart_session_name':cart.value,
+                'cart_session_name': cart.value,
             }
+
             items.append(data)
 
-    if items:
-        # return JsonResponse({"data":items},safe=False)
-        return Response(items, status=status.HTTP_200_OK)
-    else:
-        return Response(status=status.HTTP_404_NOT_FOUND)
+    return Response(data=items, status=status.HTTP_200_OK)
 
 
 @api_view(['DELETE'])
-def cart_destroy(request,cart_session_name='cart'):
+def cart_destroy(request, cart_session_name='cart'):
     '''
         DESTROY ALL ITEMS  IN CART
     '''
-    cart = Cart(request,cart_session_name)
+    cart = Cart(request, cart_session_name)
     # cart = cart.cart
     cart.clear()
 
@@ -114,11 +107,11 @@ def cart_destroy(request,cart_session_name='cart'):
 
 
 @api_view(['GET'])
-def cart_length(request,cart_session_name='cart'):
+def cart_length(request, cart_session_name='cart'):
     '''
     GET CART TOTAL AND PRICE TOTAL FOR ITEMS 
     '''
-    cart = Cart(request,cart_session_name)
+    cart = Cart(request, cart_session_name)
     total_cart = len(cart)
     total_price = cart.get_total_price()
 
@@ -135,13 +128,22 @@ def cart_length(request,cart_session_name='cart'):
 
 
 @api_view(['POST'])
-def post_cart(request,cart_session_name='cart'):
-    cart = Cart(request,cart_session_name)
+def post_cart(request, cart_session_name='cart'):
+    '''
+        POST CART ITEMS TO DATABASE AND DESTROY THE CART
+    '''
+    cart = Cart(request, cart_session_name)
 
-    for key, value in cart.cart.items():
-        print(key, value)
+   
+    for keys, values in cart.cart.items():
 
+        items = Item.objects.bulk_create([
+            Item(product_id=keys, quantity=values['quantity']
+                 )])
 
-    return Response(data='data posted successfully', status=status.HTTP_200_OK)
+        product = Product.objects.filter(pk=keys).update(
+            quantity=F('quantity')+values['quantity'])
 
+    cart.clear()
 
+    return Response(data=product, status=status.HTTP_200_OK)

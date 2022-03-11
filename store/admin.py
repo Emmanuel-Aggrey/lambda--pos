@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import  Generic,Category,Unit,Product
+from .models import  Generic,Category,Unit,Product,Item
 # Register your models here.
 
 
@@ -28,7 +28,7 @@ from .models import  Generic,Category,Unit,Product
 
 
 @admin.register(Unit)
-class UnitAdmtin(admin.ModelAdmin):
+class UnitAdmin(admin.ModelAdmin):
     list_display = ['name','unit','available','date_created','get_total_products_by_unit']
     list_editable = ['available']
     search_fields = ('name',)
@@ -46,11 +46,11 @@ class UnitAdmtin(admin.ModelAdmin):
 # @admin.register(Product)
 
 
-@admin.register(Product)
-class ProductAdmin(admin.ModelAdmin):
-    list_display = ['name','quantity','category','unit','receaved_date','stock_level','has_expire_date','months_to_expire','expire_date','has_expired',]
-    search_fields = ('name','category__name','unit__name')
-    list_filter = ['category__name','unit']
+# @admin.register(Product)
+# class ProductAdmin(admin.ModelAdmin):
+#     list_display = ['name','quantity','category','unit','receaved_date','stock_level','has_expire_date','months_to_expire','expire_date','has_expired',]
+#     search_fields = ('name','category__name','unit__name')
+#     list_filter = ['category__name','unit']
 
 
 
@@ -60,7 +60,7 @@ class ProductInline(admin.TabularInline):
     # actions = [has_expired]
     list_editable =['has_expire_date','months_to_expire','expire_date']
     list_filter =['category__name','unit__unit','supplier','months_to_expire',]
-    # filter_horizontal = ['name','supplier']
+    filter_horizontal = ['supplier','supplier']
 
   
 
@@ -73,3 +73,24 @@ class CategoryAdmin(admin.ModelAdmin):
     search_fields = ('name',)
 
 admin.site.register(Category, CategoryAdmin)
+
+
+
+
+class ItemInline(admin.TabularInline):
+    model = Item
+    fields = ['product','quantity',]
+    list_display = ['product','quantity','date_created']
+    list_filter=['product',]
+
+
+class ProductAdmin(admin.ModelAdmin):
+
+    list_display = ['name','quantity','category','unit','receaved_date','stock_level','has_expire_date','months_to_expire','expire_date','has_expired',]
+    search_fields = ('name','category__name','unit__name')
+    list_filter =['category__name','supplier','months_to_expire',]
+
+    inlines = [ItemInline]
+    
+
+admin.site.register(Product, ProductAdmin)

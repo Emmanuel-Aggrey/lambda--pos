@@ -12,7 +12,7 @@ function update_quantity(status) {
     return status ? false : true;
 }
 
-const openCart = () => {
+const openCart = (cart_name = 'cart') => {
     const cart_size = $(".cart_size").text() + " ITEMS READY FOR POSTING";
     $("#cart_div")
         .dialog("open")
@@ -26,12 +26,12 @@ const openCart = () => {
         })
         .effect("shake", "fast");
 
-    view_cart();
+    view_cart(cart_name);
 }; //end of function
 
 // add item(s) to cart
 //please check the receivingparameters
-const addToCart = (pk,cart_name='cart') => {
+const addToCart = (pk, cart_name = 'cart') => {
     if (event.which == 13 || event.which == 32) {
         event.preventDefault();
         // product_price = price
@@ -80,7 +80,7 @@ const addToCart = (pk,cart_name='cart') => {
                 cart_size(cart_name);
 
 
-                console.log("session_name",cart_name)
+                console.log("session_name", cart_name)
 
                 setTimeout(() => {
                     $(".add_to_cart").val("");
@@ -100,7 +100,7 @@ function cart_session_name(status) {
 }
 
 // list items in cart
-function view_cart(cart_name='cart') {
+function view_cart(cart_name = 'cart') {
     // const cart_name = sessionStorage.getItem('cart_name')
     url = `/cart/${cart_name}/`
 
@@ -109,15 +109,17 @@ function view_cart(cart_name='cart') {
     $.ajax({
         type: "GET",
         url: url,
+
         success: function (response) {
             for (var i in response) {
+                // console.log(response)
                 count = +i + 1;
                 table += "<tr>";
 
                 table +=
                     `` +
                     `<td >` +
-                    count +
+                    response[i].category__name +
                     `</td>` +
                     `<td >` +
                     response[i].name +
@@ -128,12 +130,12 @@ function view_cart(cart_name='cart') {
                     // + `<td >` + response[i].quantity_in_cart + `</td>`
 
                     `<td class="" placeholder="press enter or space to save">` +
-                    `<input type="number" onKeyUp="addToCart(${response[i].pk},'cart')" data-cart_name="re_order"  name="${response[i].price}"  value="${response[i].quantity_in_cart}">` +
+                    `<input type="number" onKeyUp="addToCart(${response[i].pk})" data-cart_name="re_order"  name="${response[i].price}"  value="${response[i].quantity_in_cart}">` +
                     `</td>` +
                     `<td >` +
                     response[i].total +
                     `</td>` +
-                    `<td class="trash_cart"   title="trash item" onclick="removeItemFromCart(${response[i].pk},'cart')">` +
+                    `<td class="trash_cart"   title="trash item" onclick="removeItemFromCart(${response[i].pk})">` +
                     `<i class="fa fa-trash  mx-4"   aria-hidden="true"></i>` +
                     `</td>`;
 
@@ -148,8 +150,7 @@ function view_cart(cart_name='cart') {
 }
 
 // get cart size
-const cart_size = (cart_name='cart') => {
-    // const cart_name = sessionStorage.getItem('cart_name')
+const cart_size = (cart_name = 'cart') => {
     $.get(`/cart/cart_length/${cart_name}`, function (data) {
         $(".cart_size").html(data.total_cart);
 
@@ -173,7 +174,6 @@ const cart_close_btn = () => {
 };
 
 // live search on cart table
-// live search on cart
 
 $(document).ready(function () {
     $("#cart_items_search").on("keyup", function () {
@@ -184,8 +184,8 @@ $(document).ready(function () {
     });
 });
 
-function removeItemFromCart(item,cart_name='cart') {
-    // console.log("cart_new",cart_name)
+function removeItemFromCart(item, cart_name = 'cart') {
+    // console.log("",cart_name)
     // const cart_name = sessionStorage.getItem('cart_name')
     url = `/cart/remove/${item}/${cart_name}/`;
     $.ajax({
@@ -196,7 +196,7 @@ function removeItemFromCart(item,cart_name='cart') {
         },
 
         success: function () {
-            cart_size();
+            cart_size(cart_name);
             swallAlerts(
                 "Deleted" + " - " + "successfully",
                 "success",
@@ -204,7 +204,7 @@ function removeItemFromCart(item,cart_name='cart') {
                 1000,
                 false
             );
-            view_cart();
+            view_cart(cart_name);
         },
         error: function (jqXHR, textStatus, errorThrown) {
             // alert(textStatus + ' - ' + errorThrown);
@@ -222,28 +222,42 @@ function removeItemFromCart(item,cart_name='cart') {
 
 
 // post cart data
-const post_cart = (cart_name='cart') => {
-    $("#cart_div").dialog("close");
+const post_cart = (cart_name = 'cart') => {
+    // $("#cart_div").dialog("close");
 
     $.ajax({
         url: `/cart/post_cart/${cart_name}/`,
         dataType: "json",
         type: "POST",
         data: {
-            val: $(":input").serializeArray(),
+            // val: $(":input").serializeArray(),
             csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
         },
-
+        beforeSend: function () {
+            $("#cart_post_btn").text('Posting Data Please Wait')
+        },
         success: function (response) {
-            console.log(response.data)
-            cart_size();
-            swallAlerts(
-                "Data saved" + " - " + "successfully",
-                "success",
-                "bottom-end",
-                1000,
-                false
-            );
+            if (response) {
+                // console.log(response)
+                cart_size(cart_name);
+                swallAlerts(
+                    "Data saved" + " - " + "successfully",
+                    "success",
+                    "bottom-end",
+                    1000,
+                    false
+                );
+                setTimeout(() => {
+                    $("#cart_div").dialog("close");
+                    $("#cart_post_btn").text('Post Data')
+
+                }, 1000);
+                // view_cart(cart_name);
+                const category_id = localStorage.getItem('category_id');
+
+                displayProductTable(category_id)
+            }
+
         },
         error: function (jqXHR, textStatus, errorThrown) {
             // alert(textStatus + ' - ' + errorThrown);

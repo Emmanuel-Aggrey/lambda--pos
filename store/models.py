@@ -28,6 +28,8 @@ class Generic(BaseModel):
     class  Meta:
         ordering = ['name','-date_created']
 
+    def __str__(self):
+        return self.name
 
 # auditlog.register(Generic)
 
@@ -51,10 +53,14 @@ class Unit(BaseModel):
     class Meta:
         ordering = ('-date_updated',)
 
+    def __str__(self):
+        return self.name
+
+
+
 # auditlog.register(Unit)
 
-
-
+    
 class Category(BaseModel):
     name = models.CharField(
         help_text='eg syrup,tablet,cream,shandy,guinness can 5 LT', max_length=100)
@@ -77,6 +83,11 @@ class Category(BaseModel):
     @property
     def get_absolute_url(self):
         return reverse('store:category:category', args=[self.id])
+
+
+
+    def __str__(self):
+        return self.name
 
         # store:generic:generic_home
 
@@ -132,6 +143,11 @@ class Product(BaseModel):
         # return f'{self.name} {self.category.name}'
         return self.name
 
+    @property
+    def reoder_level(self, quantity,stock_level):
+        if self.quantity < self.stock_level:
+            return 'reoder item'
+
     # def get_queryset(self, pks):
     #     return Product.objects.filter(pk__in=pks)
     @property
@@ -182,13 +198,18 @@ def update_original_stock(sender, instance, *args, **kwargs):
 
 # auditlog.register(Product)
 
-class Item(models.Model):
-    name = models.ForeignKey(
+class Item(BaseModel):
+    product = models.ForeignKey(
         Product, on_delete=models.CASCADE, related_name='items')
-    serial_number = models.CharField(max_length=200, blank=True, null=True)
+    quantity = models.PositiveIntegerField(blank=True,default=0)
+  
 
     def get_absolute_url(self):
         return reverse('neworder:issue_in', args=[self.id, self.name.name])
+
+
+    def __str__(self):
+        return   self.product.name
 
 
 # auditlog.register(Item)

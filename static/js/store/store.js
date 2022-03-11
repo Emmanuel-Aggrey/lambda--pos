@@ -65,7 +65,9 @@ $(function () {
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
                     // alert(textStatus + ' - ' + errorThrown);
-                    // swallAlerts(textStatus + ' - ' + errorThrown, 'error', "bottom-end", 3000, false);
+
+                    // comment this 
+                    swallAlerts(textStatus + ' - ' + errorThrown, 'error', "bottom-end", 3000, false);
 
                 }
             });
@@ -89,7 +91,7 @@ const populateProductTable = (data) => {
         table += ``
             + `<td >` + data[i].name + `</td>`
             + `<td >` + data[i].price + `</td>`
-            + `<td  style="${check_stock_level(data[i].stock_level,data[i].quantity)}">` + data[i].quantity + `</td>`
+            + `<td  style="${reoder_level(data[i].quantity,data[i].stock_level)}">` + data[i].quantity + `</td>`
             + `<td >` + data[i].description + `</td>`
             + `<td >` + convertNullValues(data[i].unit_name) + `</td>`
             + `<td >` + data[i].supplier + `</td>`
@@ -102,7 +104,7 @@ const populateProductTable = (data) => {
             // + `<td >` + has_expired(data[i].has_expired) + `</td>`
             + `<td class="edit_product  btn btn-light btn-outline-info"  title="edit items" onclick="getProduct(${data[i].pk})"  data-edit-product="${data[i].pk}">` + `<i class="fa fa-edit  mx-4"  style="cursor:pointer;"  aria-hidden="true"></i>` + `</td>`
 
-            + `<td class="" placeholder="press enter or space to save">` + `<input type="number" placeholder='quantity' data-cart_name="re_order" getProduct(${data[i].pk})" class="add_to_cart" name="${data[i].price}"  onKeyUp="addToCart(${data[i].pk},'cart')"  style="width:100%;">` + `</td>`
+            + `<td class="" placeholder="press enter or space to save">` + `<input type="number" placeholder='quantity' data-cart_name="re_order" getProduct(${data[i].pk})" class="add_to_cart" name="${data[i].price}"  onKeyUp="addToCart(${data[i].pk})"  style="width:100%;">` + `</td>`
 
 
 
@@ -194,6 +196,7 @@ function add_category() {
 }
 
 
+
 // get data into category table after ajax call on add or edit
 
 const displayCategoryTable = (category_id) => {
@@ -206,7 +209,7 @@ const displayCategoryTable = (category_id) => {
             success: function (response) {
 
                 populateProductTable(response)
-                console.log(response)
+                // console.log(response)
 
             },
             error: function (jqXHR, textStatus, errorThrown) {
@@ -250,8 +253,8 @@ function openProdcuts() {
 
 
 // check for re_order of items to stock
-function check_stock_level(stock_level,quantity) {
-    if (stock_level < quantity) {
+function reoder_level(quantity,stock_level) {
+    if (quantity < stock_level) {
         return  "background-color: red;"
     }
    
@@ -264,4 +267,6 @@ var colors = ["#EB7C36","#2C687A","#4A4E53","#E13234"];
 
 	return  `background-color:${colors[Math.floor(Math.random() * colors.length)]}`
 }
+
+
 
